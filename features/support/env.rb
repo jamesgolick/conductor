@@ -20,5 +20,8 @@ Webrat.configure do |config|
   config.mode = :rails
 end
 
-require 'cucumber/rails/rspec'
+require 'test/unit/assertions'
+
+World(Test::Unit::Assertions)
+
 require 'webrat/core/matchers'

@@ -1,0 +1,21 @@
+<h1>Listing Applications</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Clone url</th>
+  </tr>
+  <%- @applications.each do |application|%>
+    <tr>
+      <td><%=h application.name %></td>
+      <td><%=h application.clone_url %></td>
+    
+      <td><%=link_to 'Show', object_url(application) %></td>
+      <td><%=link_to 'Edit', edit_object_url(application) %></td>
+      <td><%=link_to 'Destroy', object_url(application), :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+<br/>
+
+<%= link_to 'New Application', new_object_url %>
