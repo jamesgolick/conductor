@@ -10,6 +10,8 @@ module NavigationHelpers
     
     when /the homepage/
       '/'
+    when /the new application page/
+      new_application_url
     
     # Add more mappings here.
     # Here is a more fancy example:
