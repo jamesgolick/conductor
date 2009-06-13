@@ -1,0 +1,17 @@
+# -*- ruby -*-
+
+require 'rubygems'
+require 'hoe'
+require 'lib/right_aws.rb'
+
+
+Hoe.new('aws', RightAws::VERSION::STRING) do |p|
+  p.rubyforge_name = 'spacegems'
+  p.developer('Travis Reeder', 'travis@appoxy.com')
+#  p.author = 'RightScale, Inc.'
+#  p.email = 'rubygems@rightscale.com'
+ 
+end
+
+
+# vim: syntax=Ruby
