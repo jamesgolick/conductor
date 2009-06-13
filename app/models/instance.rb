@@ -28,7 +28,8 @@ class Instance < ActiveRecord::Base
                                    :ami               => self.class.ami_for(size),
                                    :instance_type     => size,
                                    :availability_zone => zone
-      update_attribute :instance_id, instance[:aws_instance_id]
+      update_attributes :instance_id => instance[:aws_instance_id],
+                        :status      => 'pending'
     end
 
     def ec2

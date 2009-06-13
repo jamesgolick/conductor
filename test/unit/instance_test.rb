@@ -52,5 +52,9 @@ class InstanceTest < Test::Unit::TestCase
       id = Ec2.test_responses[:run_instances][:aws_instance_id]
       assert_equal id, @instance.instance_id
     end
+
+    should "have a status of pending" do
+      assert_equal 'pending', @instance.status
+    end
   end
 end
