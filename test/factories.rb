@@ -8,3 +8,18 @@ Factory.define :environment do |e|
   e.name "production"
 end
 
+Factory.define :instance do |i|
+  i.association :environment
+  i.size "m1_small"
+  i.role "app_server"
+  i.zone "us_east_1c"
+end
+
+Factory.define :app_server, :parent => :instance do
+end
+
+Factory.define :mysql_master, :parent => :instance do |m|
+  m.role "mysql_master"
+end
+
+
