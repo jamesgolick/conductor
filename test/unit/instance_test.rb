@@ -32,9 +32,12 @@ class InstanceTest < Test::Unit::TestCase
   end
   
   context "After creating an instance" do
-    should "create the instance on ec2" do
+    setup do
       @instance = Factory.build(:mysql_master)
       @instance.save
+    end
+
+    should "create the instance on ec2" do
       expected_launch_params = {
         :groups  => ['default'],
         :keypair => 'conductor-keypair',
@@ -43,6 +46,11 @@ class InstanceTest < Test::Unit::TestCase
         :availability_zone => @instance.zone
       }
       assert_equal expected_launch_params, Ec2.test_mode_calls[:run_instances].first
+    end
+    
+    should "save the instance_id that it gets from amazon" do
+      id = Ec2.test_responses[:run_instances][:aws_instance_id]
+      assert_equal id, @instance.instance_id
     end
   end
 end
