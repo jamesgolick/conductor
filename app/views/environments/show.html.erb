@@ -4,7 +4,7 @@
 
 <ul>
   <% @environment.instances.each do |i| -%>
-    <li><%= i.role %> (<%= i.size %>, <%= i.instance_id %>)</li>
+    <li><%= i.role %> (<%= i.status %>, <%= i.size %>, <%= i.instance_id %>)</li>
   <% end -%>
 </ul>
 
