@@ -7,6 +7,8 @@ Feature: As a user who has created an application and an environment
     When I create a "mysql_master" instance
     Then I should see "Your instance(s) are being launched"
     And I should be on the environment page for "production"
+    And I should see "1 instance running"
+    And I should see "pending"
 
   Scenario: Launching a normal instance
     Given that I've created an environment called "production"
@@ -14,6 +16,8 @@ Feature: As a user who has created an application and an environment
     When I create an "app_server" instance
     Then I should see "Your instance(s) are being launched"
     And I should be on the environment page for "production"
+    And I should see "2 instances running"
+    And I should see "pending"
 
   Scenario: Launching a normal instance when there's no database instance running
     Given that I've created an environment called "production"
