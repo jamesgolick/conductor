@@ -1,9 +1,6 @@
-<p>
-  <strong>Application:</strong><%=h @environment.application.name %>
-</p>
-<p>
-  <strong>Name:</strong><%=h @environment.name %>
-</p>
+<h2><%= h @environment.application.name %>: <%= h @environment.name %></h2>
+
+<h3><%= pluralize(@environment.instances.count, "instance") %> running</h3>
 
 <%= link_to 'Launch Instance', new_environment_instance_url(object) %>
 |
