@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ApplicationTest < Test::Unit::TestCase
-  def test_truth
-    assert true
-  end
+  should_validate_presence_of :name, :clone_url
 end
