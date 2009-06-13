@@ -5,6 +5,8 @@
   <strong>Name:</strong><%=h @environment.name %>
 </p>
 
+<%= link_to 'Launch Instance', new_environment_instance_url(object) %>
+|
 <%= link_to 'Edit', edit_object_url %>
 |
 <%= link_to 'Back', collection_url %>
