@@ -14,6 +14,9 @@ module NavigationHelpers
       new_application_url
     when /the application page for "(.+)"/i
       application_url(Application.find_by_name($1))
+    when /the environment page for "(.+)"/i
+      env = Environment.find_by_name($1)
+      application_environment_url(env.application, env)
     
     # Add more mappings here.
     # Here is a more fancy example:
