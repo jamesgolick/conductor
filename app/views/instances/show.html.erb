@@ -1,0 +1,16 @@
+<p>
+  <strong>Environment:</strong><%=h @instance.environment_id %>
+</p>
+<p>
+  <strong>Size:</strong><%=h @instance.size %>
+</p>
+<p>
+  <strong>Zone:</strong><%=h @instance.zone %>
+</p>
+<p>
+  <strong>Role:</strong><%=h @instance.role %>
+</p>
+
+<%= link_to 'Edit', edit_object_url %>
+|
+<%= link_to 'Back', collection_url %>

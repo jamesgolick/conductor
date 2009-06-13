@@ -1,0 +1,12 @@
+one:
+  id: 1
+  environment_id: 1
+  size: MyString
+  zone: MyString
+  role: MyString
+two:
+  id: 2
+  environment_id: 1
+  size: MyString
+  zone: MyString
+  role: MyString

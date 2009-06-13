@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :instances
+
   map.resources :applications, :has_many => :environments
 
   # The priority is based upon order of creation: first created -> highest priority.

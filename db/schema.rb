@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090613162214) do
+ActiveRecord::Schema.define(:version => 20090613170445) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
@@ -21,6 +21,15 @@ ActiveRecord::Schema.define(:version => 20090613162214) do
   create_table "environments", :force => true do |t|
     t.integer  "application_id"
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "instances", :force => true do |t|
+    t.integer  "environment_id"
+    t.string   "size"
+    t.string   "zone"
+    t.string   "role"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
