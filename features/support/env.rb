@@ -25,3 +25,6 @@ require 'test/unit/assertions'
 World(Test::Unit::Assertions)
 
 require 'webrat/core/matchers'
+
+Ec2.mode = :test
+
