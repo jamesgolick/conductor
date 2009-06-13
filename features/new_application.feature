@@ -9,3 +9,10 @@ Feature: As a user
     And I press "Create"
     Then I should see "Your application has been created."
 
+  Scenario: Invalid parameters
+    When I go to the new application page
+    And I press "Create"
+    Then I should not see "Your application has been created."
+    And I should see "Name can't be blank"
+    And I should see "Clone url can't be blank"
+
