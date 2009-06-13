@@ -2,6 +2,13 @@
 
 <h3><%= pluralize(@environment.instances.count, "instance") %> running</h3>
 
+<ul>
+  <% @environment.instances.each do |i| -%>
+    <li><%= i.role %> (<%= i.size %>, <%= i.instance_id %>)</li>
+  <% end -%>
+</ul>
+
+
 <%= link_to 'Launch Instance', new_environment_instance_url(object) %>
 |
 <%= link_to 'Edit', edit_object_url %>
