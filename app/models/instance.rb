@@ -1,4 +1,10 @@
 class Instance < ActiveRecord::Base
+  class << self
+    def ami_for(instance_size)
+      %w(m1_small c1_medium).include?(instance_size) ? "ami-ef48af86" : "ami-e257b08b"
+    end
+  end
+
   belongs_to :environment
 
   enum_field :size, %w( m1_small m1_large m1_xlarge c1_medium c1_xlarge )
@@ -7,10 +13,24 @@ class Instance < ActiveRecord::Base
 
   validate :database_server_is_running
 
+  after_create :launch_ec2_instance
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?
         errors.add(:base, "You must launch a database server before you can launch an app server")
       end
+    end
+
+    def launch_ec2_instance
+      ec2.run_instances :groups            => ['default'],
+                        :keypair           => 'conductor-keypair',
+                        :ami               => self.class.ami_for(size),
+                        :instance_type     => size,
+                        :availability_zone => zone
+    end
+
+    def ec2
+      @ec2 ||= Ec2.new
     end
 end

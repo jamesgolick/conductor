@@ -2,7 +2,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class InstanceTest < Test::Unit::TestCase
   def setup
-    @instance = Factory(:mysql_master)
+    Ec2.mode            = :test
+    Ec2.test_mode_calls = {}
+    @instance           = Factory(:mysql_master)
   end
 
   should_belong_to :environment
@@ -26,6 +28,21 @@ class InstanceTest < Test::Unit::TestCase
 
     should "have an error that you need to launch a db server first" do
       assert_match(/You must launch a database server/, @instance.errors[:base])
+    end
+  end
+  
+  context "After creating an instance" do
+    should "create the instance on ec2" do
+      @instance = Factory.build(:mysql_master)
+      @instance.save
+      expected_launch_params = {
+        :groups  => ['default'],
+        :keypair => 'conductor-keypair',
+        :ami     => Instance.ami_for(@instance.size),
+        :instance_type => @instance.size,
+        :availability_zone => @instance.zone
+      }
+      assert_equal expected_launch_params, Ec2.test_mode_calls[:run_instances].first
     end
   end
 end
