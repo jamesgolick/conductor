@@ -5,6 +5,8 @@
   <strong>Clone url:</strong><%=h @application.clone_url %>
 </p>
 
+<%= link_to 'Add an Environment', new_application_environment_url(object) %>
+|
 <%= link_to 'Edit', edit_object_url %>
 |
 <%= link_to 'Back', collection_url %>
