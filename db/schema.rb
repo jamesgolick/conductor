@@ -9,11 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090613020038) do
+ActiveRecord::Schema.define(:version => 20090613162214) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
     t.string   "clone_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "environments", :force => true do |t|
+    t.integer  "application_id"
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

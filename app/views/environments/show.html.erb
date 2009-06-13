@@ -1,0 +1,10 @@
+<p>
+  <strong>Application:</strong><%=h @environment.application_id %>
+</p>
+<p>
+  <strong>Name:</strong><%=h @environment.name %>
+</p>
+
+<%= link_to 'Edit', edit_object_url %>
+|
+<%= link_to 'Back', collection_url %>

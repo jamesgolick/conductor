@@ -1,0 +1,21 @@
+<h1>Listing Environments</h1>
+
+<table>
+  <tr>
+    <th>Application</th>
+    <th>Name</th>
+  </tr>
+  <%- @environments.each do |environment|%>
+    <tr>
+      <td><%=h environment.application_id %></td>
+      <td><%=h environment.name %></td>
+    
+      <td><%=link_to 'Show', object_url(environment) %></td>
+      <td><%=link_to 'Edit', edit_object_url(environment) %></td>
+      <td><%=link_to 'Destroy', object_url(environment), :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+<br/>
+
+<%= link_to 'New Environment', new_object_url %>
