@@ -11,6 +11,7 @@ Feature: As a user who has created an application
     And I fill in "Name" with "production"
     And I press "Create"
     Then I should see "Your environment has been created"
+    And I should see "MyApp"
 
   Scenario: Invalid parameters
     And I press "Create"
