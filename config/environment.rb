@@ -21,6 +21,7 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem "giraffesoft-resource_controller", :lib => "resource_controller"
   config.gem "thoughtbot-shoulda",              :lib => "shoulda"
+  config.gem "thoughtbot-factory_girl",         :lib => "factory_girl"
   config.gem "authlogic"
   config.gem "cucumber"
 
