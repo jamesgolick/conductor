@@ -12,6 +12,8 @@ module NavigationHelpers
       '/'
     when /the new application page/
       new_application_url
+    when /the application page for "(.+)"/i
+      application_url(Application.find_by_name($1))
     
     # Add more mappings here.
     # Here is a more fancy example:
