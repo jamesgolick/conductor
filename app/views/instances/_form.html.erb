@@ -1,16 +1,12 @@
 <p>
-  <label for="instance_environment_id">Environment:</label>
-  <%= f.text_field :environment_id %>
+  <%= f.label :size, "Size:" %>
+  <%= f.select :size, Instance::SIZES %>
 </p>
 <p>
-  <label for="instance_size">Size:</label>
-  <%= f.text_field :size %>
+  <%= f.label :zone, "Availability Zone:" %>
+  <%= f.select :zone, Instance::ZONES %>
 </p>
 <p>
-  <label for="instance_zone">Zone:</label>
-  <%= f.text_field :zone %>
-</p>
-<p>
-  <label for="instance_role">Role:</label>
-  <%= f.text_field :role %>
+  <%= f.label :role, "Role:" %>
+  <%= f.select :role, Instance::ROLES %>
 </p>
