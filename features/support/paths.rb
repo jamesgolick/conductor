@@ -16,7 +16,7 @@ module NavigationHelpers
       application_url(Application.find_by_name($1))
     when /the environment page for "(.+)"/i
       env = Environment.find_by_name($1)
-      application_environment_url(env.application, env)
+      application_environment_path(env.application, env)
     
     # Add more mappings here.
     # Here is a more fancy example:

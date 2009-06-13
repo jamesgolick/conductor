@@ -25,7 +25,7 @@ class InstanceTest < Test::Unit::TestCase
     end
 
     should "have an error that you need to launch a db server first" do
-      assert_match(/you must launch a database server/, @instance.errors[:base])
+      assert_match(/You must launch a database server/, @instance.errors[:base])
     end
   end
 end

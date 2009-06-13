@@ -10,7 +10,7 @@ class Instance < ActiveRecord::Base
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?
-        errors.add(:base, "you must launch a database server before you can launch an app server")
+        errors.add(:base, "You must launch a database server before you can launch an app server")
       end
     end
 end

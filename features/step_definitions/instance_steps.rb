@@ -1,12 +1,5 @@
-Then /^a "([^\"]*)" instance should be launched in "([^\"]*)" as a "([^\"]*)"$/ do |size, zone, role|
-    pending
-end
-
-Given /^that I've a running database instance$/ do
-  pending
-end
-
-Then /^no instances should be launched$/ do
-  pending
+Given /^that I've launched a (.+) instance in (.+)$/ do |instance_type, env_name|
+  Factory(instance_type.to_sym, 
+            :environment => Environment.find_by_name(env_name))
 end
 
