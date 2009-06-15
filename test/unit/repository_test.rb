@@ -23,5 +23,17 @@ class RepositoryTest < Test::Unit::TestCase
       assert File.exist?(@clone_path + "/a_file")
     end
   end
+
+  context "When the repository has already been cloned" do
+    setup do
+      @repo = Repository.new(@repo_path, @clone_path)
+      `cd #{@repo_path} && touch another_file && git add . && git commit -m"commit"`
+      @repo = Repository.new(@repo_path, @clone_path)
+    end
+
+    should "update the repo" do
+      assert File.exist?(@clone_path + "/another_file")
+    end
+  end
 end
 
