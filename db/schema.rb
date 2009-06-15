@@ -9,13 +9,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090615003426) do
+ActiveRecord::Schema.define(:version => 20090615141410) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
     t.string   "clone_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "cookbook_clone_url"
   end
 
   create_table "environments", :force => true do |t|
