@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090613223901) do
+ActiveRecord::Schema.define(:version => 20090615003426) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(:version => 20090613223901) do
     t.datetime "updated_at"
     t.string   "instance_id"
     t.string   "status"
+    t.string   "dns_name"
+    t.string   "private_dns_name"
   end
 
 end

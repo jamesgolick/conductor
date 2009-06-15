@@ -7,13 +7,20 @@ class Instance < ActiveRecord::Base
 
   belongs_to :environment
 
-  enum_field :size, %w( m1_small m1_large m1_xlarge c1_medium c1_xlarge )
-  enum_field :role, %w( mysql_master app_server )
-  enum_field :zone, %w( us_east_1a us_east_1b us_east_1c us_east_1d )
+  enum_field :size,   %w( m1_small m1_large m1_xlarge c1_medium c1_xlarge )
+  enum_field :role,   %w( mysql_master app_server )
+  enum_field :zone,   %w( us_east_1a us_east_1b us_east_1c us_east_1d )
+  enum_field :status, %w( pending running ), :allow_nil => true
 
   validate :database_server_is_running
 
   after_create :launch_ec2_instance
+
+  def running!(attrs)
+    update_attributes :dns_name         => attrs[:dns_name],
+                      :private_dns_name => attrs[:private_dns_name],
+                      :status           => 'running'
+  end
 
   protected
     def database_server_is_running

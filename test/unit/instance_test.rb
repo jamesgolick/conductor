@@ -57,4 +57,24 @@ class InstanceTest < Test::Unit::TestCase
       assert_equal 'pending', @instance.status
     end
   end
+
+  context "When a pending instance becomes running" do
+    setup do
+      @instance = Factory(:mysql_master)
+      @instance.running! :private_dns_name => "private.host.name",
+                         :dns_name         => "public.host.name"
+    end
+
+    should "grab the public hostname that's passed along" do
+      assert_equal "public.host.name", @instance.dns_name
+    end
+
+    should "grab the private host name that's passed along" do
+      assert_equal "private.host.name", @instance.private_dns_name
+    end
+
+    should "set the status to running" do
+      assert @instance.running?
+    end
+  end
 end
