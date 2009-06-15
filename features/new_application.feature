@@ -16,5 +16,5 @@ Feature: As a user
     Then I should not see "Your application has been created."
     And I should see "Name can't be blank"
     And I should see "Clone url can't be blank"
-    And I should see "Cookbook Clone url can't be blank"
+    And I should see "Cookbook clone url can't be blank"
 
