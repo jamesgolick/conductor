@@ -1,0 +1,31 @@
+#!/bin/bash
+
+APPLICATION=$1;
+COOKBOOKS_URL=$2;
+SERVER_ADDRESS=$3;
+CLONE_DIR=`dirname $0`/../cookbook_repositories/$APPLICATION
+BOOTSTRAP_ARCHIVE=`dirname $0`/../tmp/$APPLICATION.bootstrap.tar.gz
+ORIGINAL_LOCATION=`pwd`
+
+
+if [ -d $CLONE_DIR ]; then
+  echo "Repository exists: pulling"
+  cd $CLONE_DIR && git pull 2>&1 | sed -e's/^/    /' && cd $ORIGINAL_LOCATION;
+else
+  echo "Repository doesn't exist yet: cloning"
+  git clone $COOKBOOKS_URL $CLONE_DIR 2>&1 | sed -e's/^/    /'
+fi;
+
+echo "Archiving the bootstrap"
+cp -R $CLONE_DIR/bootstrap tmp/bootstrap
+cd tmp
+tar --file=$APPLICATION.bootstrap.tar.gz -czv bootstrap | sed -e's/^/    /'
+
+echo "Transferring the file to $SERVER_ADDRESS"
+scp $APPLICATION.bootstrap.tar.gz $SERVER_ADDRESS:
+
+echo "Cleaning up"
+rm -Rf bootstrap
+
+
+
