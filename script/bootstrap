@@ -21,11 +21,19 @@ cp -R $CLONE_DIR/bootstrap tmp/bootstrap
 cd tmp
 tar --file=$APPLICATION.bootstrap.tar.gz -czv bootstrap | sed -e's/^/    /'
 
-echo "Transferring the file to $SERVER_ADDRESS"
-scp $APPLICATION.bootstrap.tar.gz $SERVER_ADDRESS:
+echo "Transferring the file to $SERVER_ADDRESS" && \
+scp $APPLICATION.bootstrap.tar.gz $SERVER_ADDRESS: && \
+echo "Untarring bootstrap on server" && \
+ssh $SERVER_ADDRESS "tar zxvf $APPLICATION.bootstrap.tar.gz" 2>&1 | sed -e's/^/    /' && \
+echo "Running bootstrap" && \
+OUTPUT=$(ssh $SERVER_ADDRESS "bootstrap/bootstrap.tar.gz" 2>&1)
+
+RETURN=$?
+
+echo $OUTPUT | sed -e's/^/    /'
 
 echo "Cleaning up"
 rm -Rf bootstrap
 
-
+exit $RETURN
 
