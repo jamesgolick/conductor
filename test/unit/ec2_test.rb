@@ -1,6 +1,10 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class Ec2Test < Test::Unit::TestCase
+  def setup
+    Ec2.test_mode_calls = {}
+  end
+
   context "In production mode" do
     setup do
       Ec2.mode = :production
