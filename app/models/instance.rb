@@ -21,6 +21,7 @@ class Instance < ActiveRecord::Base
     update_attributes :dns_name         => attrs[:dns_name],
                       :private_dns_name => attrs[:private_dns_name],
                       :status           => 'running'
+    Bootstrapper.new(self).bootstrap
   end
 
   protected
