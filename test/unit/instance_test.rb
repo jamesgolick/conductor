@@ -60,6 +60,7 @@ class InstanceTest < Test::Unit::TestCase
 
   context "When a pending instance becomes running" do
     setup do
+      Bootstrapper.any_instance.stubs(:bootstrap)
       @instance.running! :private_dns_name => "private.host.name",
                          :dns_name         => "public.host.name"
     end
@@ -78,6 +79,14 @@ class InstanceTest < Test::Unit::TestCase
 
     before_should "bootstrap the instance" do
       Bootstrapper.expects(:new).with(@instance).returns(mock(:bootstrap => true))
+    end
+  end
+
+  context "Setting an instance as bootstrapped" do
+    should "set the status to bootstrapped" do
+      @instance = Factory(:running_instance)
+      @instance.bootstrapped!
+      assert @instance.bootstrapped?
     end
   end
 end

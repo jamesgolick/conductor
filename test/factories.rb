@@ -23,4 +23,7 @@ Factory.define :mysql_master, :parent => :instance do |m|
   m.role "mysql_master"
 end
 
-
+Factory.define :running_instance, :parent => :instance do |m|
+  m.status "running"
+  m.role "mysql_master"
+end

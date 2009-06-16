@@ -9,6 +9,7 @@ class Bootstrapper
 
   def bootstrap
     `#{cmd}`
+    instance.bootstrapped!
   end
 
   protected

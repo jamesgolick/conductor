@@ -11,7 +11,7 @@ class Instance < ActiveRecord::Base
   enum_field :size,   %w( m1_small m1_large m1_xlarge c1_medium c1_xlarge )
   enum_field :role,   %w( mysql_master app_server )
   enum_field :zone,   %w( us_east_1a us_east_1b us_east_1c us_east_1d )
-  enum_field :status, %w( pending running ), :allow_nil => true
+  enum_field :status, %w( pending running bootstrapped ), :allow_nil => true
 
   validate :database_server_is_running
 
@@ -22,6 +22,10 @@ class Instance < ActiveRecord::Base
                       :private_dns_name => attrs[:private_dns_name],
                       :status           => 'running'
     Bootstrapper.new(self).bootstrap
+  end
+
+  def bootstrapped!
+    update_attribute :status, 'bootstrapped'
   end
 
   protected
