@@ -8,6 +8,7 @@ class InstanceTest < Test::Unit::TestCase
   end
 
   should_belong_to :environment
+  should_have_many :chef_logs
   should_allow_values_for :size, Instance::SIZES
   should_not_allow_values_for :size, %w(other stuff), :message => /invalid size/i
   should_allow_values_for :role, Instance::ROLES
