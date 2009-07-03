@@ -1,0 +1,87 @@
+= Net::SSH::Multi
+
+* http://net-ssh.rubyforge.org/multi
+
+== DESCRIPTION:
+
+Net::SSH::Multi is a library for controlling multiple Net::SSH connections via a single interface. It exposes an API similar to that of Net::SSH::Connection::Session and Net::SSH::Connection::Channel, making it simpler to adapt programs designed for single connections to be used with multiple connections.
+
+This library is particularly useful for automating repetitive tasks that must be performed on multiple machines. It executes the commands in parallel, and allows commands to be executed on subsets of servers (defined by groups).
+
+== FEATURES:
+
+* Easily manage multiple connections
+* Open channels, spawn processes, etc. on multiple connections in parallel
+* Transparently limit concurrent connections when dealing with large numbers of servers (Net::SSH::Multi::Session#concurrent_connections)
+* Specify a default gateway machine through which connections should be tunneled, or even specify a different gateway machine for each server
+
+== SYNOPSIS:
+
+In a nutshell:
+
+  require 'net/ssh/multi'
+
+  Net::SSH::Multi.start do |session|
+    # access servers via a gateway
+    session.via 'gateway', 'gateway-user'
+
+    # define the servers we want to use
+    session.use 'user1@host1'
+    session.use 'user2@host2'
+
+    # define servers in groups for more granular access
+    session.group :app do
+      session.use 'user@app1'
+      session.use 'user@app2'
+    end
+
+    # execute commands on all servers
+    session.exec "uptime"
+
+    # execute commands on a subset of servers
+    session.with(:app).exec "hostname"
+
+    # run the aggregated event loop
+    session.loop
+  end
+
+See Net::SSH::Multi::Session for more documentation.
+
+== REQUIREMENTS:
+
+* net-ssh (version 2)
+* net-ssh-gateway
+
+If you want to run the tests or use any of the Rake tasks, you'll need:
+
+* Echoe (for the Rakefile)
+* Mocha (for the tests)
+
+== INSTALL:
+
+* gem install net-ssh-multi (might need sudo privileges)
+
+== LICENSE:
+
+(The MIT License)
+
+Copyright (c) 2008 Jamis Buck <jamis@37signals.com>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

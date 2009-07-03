@@ -1,0 +1,122 @@
+--- !ruby/object:Gem::Specification 
+name: net-ssh-multi
+version: !ruby/object:Gem::Version 
+  version: 1.0.1
+platform: ruby
+authors: 
+- Jamis Buck
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-02-01 00:00:00 -05:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: net-ssh
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 1.99.2
+    version: 
+- !ruby/object:Gem::Dependency 
+  name: net-ssh-gateway
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 0.99.0
+    version: 
+- !ruby/object:Gem::Dependency 
+  name: echoe
+  type: :development
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: "0"
+    version: 
+description: Control multiple Net::SSH connections via a single interface
+email: jamis@jamisbuck.org
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- CHANGELOG.rdoc
+- lib/net/ssh/multi/channel.rb
+- lib/net/ssh/multi/channel_proxy.rb
+- lib/net/ssh/multi/dynamic_server.rb
+- lib/net/ssh/multi/pending_connection.rb
+- lib/net/ssh/multi/server.rb
+- lib/net/ssh/multi/server_list.rb
+- lib/net/ssh/multi/session.rb
+- lib/net/ssh/multi/session_actions.rb
+- lib/net/ssh/multi/subsession.rb
+- lib/net/ssh/multi/version.rb
+- lib/net/ssh/multi.rb
+- README.rdoc
+files: 
+- CHANGELOG.rdoc
+- lib/net/ssh/multi/channel.rb
+- lib/net/ssh/multi/channel_proxy.rb
+- lib/net/ssh/multi/dynamic_server.rb
+- lib/net/ssh/multi/pending_connection.rb
+- lib/net/ssh/multi/server.rb
+- lib/net/ssh/multi/server_list.rb
+- lib/net/ssh/multi/session.rb
+- lib/net/ssh/multi/session_actions.rb
+- lib/net/ssh/multi/subsession.rb
+- lib/net/ssh/multi/version.rb
+- lib/net/ssh/multi.rb
+- Manifest
+- Rakefile
+- README.rdoc
+- setup.rb
+- test/channel_test.rb
+- test/common.rb
+- test/multi_test.rb
+- test/server_test.rb
+- test/session_actions_test.rb
+- test/session_test.rb
+- test/test_all.rb
+- net-ssh-multi.gemspec
+has_rdoc: true
+homepage: http://net-ssh.rubyforge.org/multi
+post_install_message: 
+rdoc_options: 
+- --line-numbers
+- --inline-source
+- --title
+- Net-ssh-multi
+- --main
+- README.rdoc
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "1.2"
+  version: 
+requirements: []
+
+rubyforge_project: net-ssh-multi
+rubygems_version: 1.3.1
+signing_key: 
+specification_version: 2
+summary: Control multiple Net::SSH connections via a single interface
+test_files: 
+- test/test_all.rb
