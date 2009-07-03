@@ -26,4 +26,11 @@ end
 Factory.define :running_instance, :parent => :instance do |m|
   m.status "running"
   m.role "mysql_master"
+  m.dns_name "123.amazonaws.com"
+  m.private_dns_name "private.internal.amzn.com"
 end
+
+Factory.define :bootstrapped_instance, :parent => :running_instance do |i|
+  i.status "bootstrapped"
+end
+
