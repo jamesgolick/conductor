@@ -31,6 +31,6 @@ class ChefRunnerTest < Test::Unit::TestCase
     end
 
     def run_chef
-      ChefRunner.new(@instance.connection_string).run_chef
+      ChefRunner.new(@instance).run_chef
     end
 end

@@ -8,7 +8,7 @@ class ChefRunner
   def run_chef
     Net::SSH::Multi.start do |session|
       servers.each do |s|
-        session.use s
+        session.use s.connection_string
       end
 
       session.open_channel do |channel|
