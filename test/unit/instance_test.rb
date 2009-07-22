@@ -61,7 +61,6 @@ class InstanceTest < Test::Unit::TestCase
 
   context "When a pending instance becomes running" do
     setup do
-      Bootstrapper.any_instance.stubs(:bootstrap)
       @instance.running! :private_dns_name => "private.host.name",
                          :dns_name         => "public.host.name"
     end
@@ -76,10 +75,6 @@ class InstanceTest < Test::Unit::TestCase
 
     should "set the status to running" do
       assert @instance.running?
-    end
-
-    before_should "bootstrap the instance" do
-      Bootstrapper.expects(:new).with(@instance).returns(mock(:bootstrap => true))
     end
   end
 
