@@ -49,4 +49,12 @@ class Ec2Test < Test::Unit::TestCase
       assert_equal "test_secret_access_key", Ec2.credentials[:secret_access_key]
     end
   end
+
+  context "The connection" do
+    should "be made to the RightAws api" do
+      RightAws::Ec2.expects(:new).
+        with("test_access_key_id", "test_secret_access_key")
+      Ec2.new.send :connection
+    end
+  end
 end

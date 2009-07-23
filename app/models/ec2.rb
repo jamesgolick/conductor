@@ -48,6 +48,8 @@ class Ec2
     end
 
     def connection
+      @connection ||= RightAws::Ec2.new(self.class.credentials[:access_key_id],
+                                          self.class.credentials[:secret_access_key])
     end
 end
 
