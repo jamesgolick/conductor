@@ -42,4 +42,11 @@ class Ec2Test < Test::Unit::TestCase
       assert_equal opts, Ec2.test_mode_calls[:run_instances].first
     end
   end
+
+  context "The credentials" do
+    should "be grabbed from config/aws.yml" do
+      assert_equal "test_access_key_id", Ec2.credentials[:access_key_id]
+      assert_equal "test_secret_access_key", Ec2.credentials[:secret_access_key]
+    end
+  end
 end

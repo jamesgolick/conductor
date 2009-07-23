@@ -24,6 +24,12 @@ class Ec2
     }
   }
 
+  class << self
+    def credentials
+      @credentials ||= YAML.load(File.read(Rails.root.to_s + "/config/aws.yml"))[Rails.env]
+    end
+  end
+
   def run_instances(opts)
     send("run_instances_#{mode}", opts)
   end
