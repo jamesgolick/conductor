@@ -85,4 +85,11 @@ class InstanceTest < Test::Unit::TestCase
       assert @instance.bootstrapped?
     end
   end
+
+  context "After destroying an instances" do
+    should "ask ec2 to destroy it" do
+      Ec2.any_instance.expects(:terminate_instances).with(@instance.instance_id)
+      @instance.destroy
+    end
+  end
 end

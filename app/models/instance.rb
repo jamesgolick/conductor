@@ -16,7 +16,8 @@ class Instance < ActiveRecord::Base
 
   validate :database_server_is_running
 
-  after_create :launch_ec2_instance
+  after_create   :launch_ec2_instance
+  before_destroy :terminate_ec2_instance
 
   def running!(attrs)
     update_attributes :dns_name         => attrs[:dns_name],
@@ -43,6 +44,10 @@ class Instance < ActiveRecord::Base
                                    :availability_zone => zone
       update_attributes :instance_id => instance[:aws_instance_id],
                         :status      => 'pending'
+    end
+
+    def terminate_ec2_instance
+      ec2.terminate_instances instance_id
     end
 
     def ec2
