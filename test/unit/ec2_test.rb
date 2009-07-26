@@ -23,6 +23,13 @@ class Ec2Test < Test::Unit::TestCase
                          :groups => ['default'],
                          :keypair => 'conductor-key'
     end
+
+    should "destroy an instance" do
+      mock_connection = mock
+      mock_connection.expects(:terminate_instances).with(['i-12345'])
+      @ec2.stubs(:connection).returns(mock_connection)
+      @ec2.terminate_instances('i-12345')
+    end
   end
 
   context "In test mode" do
