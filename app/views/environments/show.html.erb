@@ -4,7 +4,7 @@
 
 <ul>
   <% @environment.instances.each do |i| -%>
-    <li><%= i.role %> (<%= i.status %>, <%= i.size %>, <%= i.instance_id %>)</li>
+    <li><%= i.role %> (<%= i.status %>, <%= i.size %>, <%= i.instance_id %>) <%= link_to "delete", environment_instance_url(@environment, i), :method => :delete, :confirm => "Are you sure?!" %></li>
   <% end -%>
 </ul>
 
