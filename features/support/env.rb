@@ -28,3 +28,7 @@ require 'webrat/core/matchers'
 
 Ec2.mode = :test
 
+After do
+  Ec2.reset_test_mode!
+end
+
