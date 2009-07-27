@@ -9,6 +9,5 @@ Feature: As a user
     When I go to the environment page for "production"
     And I follow "delete"
     Then I should see "0 instances running"
-    And I should see "1 instance terminating"
     And the instance should be terminated
 

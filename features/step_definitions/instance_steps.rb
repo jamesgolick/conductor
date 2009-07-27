@@ -18,3 +18,7 @@ Then %r{^(\d+|no) instances? should be running$} do |number|
   assert_equal number, Ec2.test_mode_calls[:run_instances].length
 end
 
+Then /^the instance should be terminated$/ do
+  assert Ec2.test_mode_calls[:terminate_instances].length > 0
+end
+

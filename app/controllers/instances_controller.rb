@@ -3,4 +3,6 @@ class InstancesController < ResourceController::Base
 
   create.flash { "Your instance(s) are being launched." }
   create.wants.html { redirect_to [@environment.application, @environment] }
+
+  destroy.wants.html { redirect_to [@environment.application, @environment] }
 end
