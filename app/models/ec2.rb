@@ -29,6 +29,10 @@ class Ec2
     def credentials
       @credentials ||= YAML.load(File.read(Rails.root.to_s + "/config/aws.yml"))[Rails.env]
     end
+
+    def reset_test_mode!
+      self.test_mode_calls = {}
+    end
   end
 
   def run_instances(opts)

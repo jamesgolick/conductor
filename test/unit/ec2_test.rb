@@ -69,4 +69,12 @@ class Ec2Test < Test::Unit::TestCase
       Ec2.new.send :connection
     end
   end
+
+  context "Resetting test mode" do
+    should "revert test_mode_calls to an empty hash" do
+      Ec2.test_mode_calls[:run_instances] = []
+      Ec2.reset_test_mode!
+      assert_equal({}, Ec2.test_mode_calls)
+    end
+  end
 end
