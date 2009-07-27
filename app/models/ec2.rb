@@ -2,7 +2,6 @@ class Ec2
   cattr_accessor :mode, :test_responses, :test_mode_calls
 
   self.mode            = :production
-  self.test_mode_calls = {}
   self.test_responses  = {
     :run_instances => {
        :aws_image_id       => "ami-e444444d",
@@ -31,9 +30,11 @@ class Ec2
     end
 
     def reset_test_mode!
-      self.test_mode_calls = {}
+      self.test_mode_calls = Hash.new { |h,k| h[k] = [] }
     end
   end
+
+  reset_test_mode!
 
   def run_instances(opts)
     send("run_instances_#{mode}", opts)
