@@ -1,6 +1,7 @@
 class Ec2
   cattr_accessor :mode, :test_responses, :test_mode_calls
 
+  self.mode            = :production
   self.test_mode_calls = {}
   self.test_responses  = {
     :run_instances => {
