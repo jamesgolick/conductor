@@ -48,6 +48,11 @@ class Ec2Test < Test::Unit::TestCase
       assert_equal Ec2.test_responses[:run_instances], @ec2.run_instances(opts)
       assert_equal opts, Ec2.test_mode_calls[:run_instances].first
     end
+
+    should "store the calls to terminate_instances in an array" do
+      @ec2.terminate_instances "i-42i1"
+      assert_equal ["i-42i1"], @ec2.test_mode_calls[:terminate_instances].first
+    end
   end
 
   context "The credentials" do

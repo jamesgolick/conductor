@@ -35,7 +35,7 @@ class Ec2
   end
 
   def terminate_instances(*instances)
-    connection.terminate_instances(instances)
+    send("terminate_instances_#{mode}", *instances)
   end
 
   protected
@@ -49,6 +49,15 @@ class Ec2
       test_mode_calls[:run_instances] ||= []
       test_mode_calls[:run_instances] << opts
       test_responses[:run_instances]
+    end
+
+    def terminate_instances_production(*instances)
+      connection.terminate_instances(instances)
+    end
+
+    def terminate_instances_test(*instances)
+      test_mode_calls[:terminate_instances] ||= []
+      test_mode_calls[:terminate_instances] << instances
     end
 
     def connection
