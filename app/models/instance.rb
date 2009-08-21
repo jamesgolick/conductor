@@ -1,7 +1,7 @@
 class Instance < ActiveRecord::Base
   class << self
     def ami_for(instance_size)
-      %w(m1_small c1_medium).include?(instance_size) ? "ami-ef48af86" : "ami-e257b08b"
+      %w(m1.small c1.medium).include?(instance_size) ? "ami-ef48af86" : "ami-e257b08b"
     end
   end
 
