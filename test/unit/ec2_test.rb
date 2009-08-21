@@ -81,4 +81,12 @@ test:
       assert_equal({}, Ec2.test_mode_calls)
     end
   end
+
+  context "Describing instances" do
+    should "defer directly to the connection" do
+      ec2 = Ec2.new
+      ec2.send(:connection).expects(:describe_instances).with("i-12345")
+      ec2.describe_instances("i-12345")
+    end
+  end
 end

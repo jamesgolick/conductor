@@ -44,6 +44,10 @@ class Ec2
     send("terminate_instances_#{mode}", *instances)
   end
 
+  def describe_instances(instance_id)
+    connection.describe_instances(instance_id)
+  end
+
   protected
     def run_instances_production(opts)
       connection.run_instances(opts[:ami], 1, 1, opts[:groups], opts[:keypair], '',
