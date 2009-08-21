@@ -33,7 +33,7 @@ class Instance < ActiveRecord::Base
     details = aws_instance_details
     update_attributes :dns_name         => details[:dns_name],
                       :private_dns_name => details[:private_dns_name],
-                      :zone             => details[:availability_zone],
+                      :zone             => details[:aws_availability_zone],
                       :status           => details[:aws_state]
   end
 

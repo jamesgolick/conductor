@@ -115,7 +115,7 @@ class InstanceTest < Test::Unit::TestCase
       end
 
       should "grab the availability_zone" do
-        assert_equal describe_instances_result[:availability_zone], @instance.zone
+        assert_equal describe_instances_result[:aws_availability_zone], @instance.zone
       end
     end
   end
