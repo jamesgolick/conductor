@@ -54,7 +54,7 @@ class Instance < ActiveRecord::Base
                                    :ami               => self.class.ami_for(size),
                                    :instance_type     => size,
                                    :availability_zone => zone
-      update_attributes :instance_id => instance[:aws_instance_id],
+      update_attributes :instance_id => instance.first[:aws_instance_id],
                         :status      => 'pending'
     end
 
