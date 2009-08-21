@@ -30,11 +30,15 @@ class Instance < ActiveRecord::Base
   end
 
   def update_instance_state
-    details = ec2.describe_instances(instance_id).first
+    details = aws_instance_details
     update_attributes :dns_name         => details[:dns_name],
                       :private_dns_name => details[:private_dns_name],
                       :zone             => details[:availability_zone],
                       :status           => details[:aws_state]
+  end
+
+  def aws_state_changed?
+    aws_instance_details[:aws_state] != status
   end
 
   protected
@@ -60,5 +64,9 @@ class Instance < ActiveRecord::Base
 
     def ec2
       @ec2 ||= Ec2.new
+    end
+
+    def aws_instance_details
+      ec2.describe_instances(instance_id).first
     end
 end

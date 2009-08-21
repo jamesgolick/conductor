@@ -98,7 +98,7 @@ class InstanceTest < Test::Unit::TestCase
       setup do
         @environment.stubs(:has_database_server?).returns(true)
         @instance = Factory(:instance, :environment => @environment)
-        Ec2.any_instance.stubs(:describe_instances).returns([describe_instnaces_result])
+        Ec2.any_instance.stubs(:describe_instances).returns([describe_instances_result])
         @instance.update_instance_state
       end
 
@@ -107,21 +107,38 @@ class InstanceTest < Test::Unit::TestCase
       end
 
       should "grab the dns_name" do
-        assert_equal describe_instnaces_result[:dns_name], @instance.dns_name
+        assert_equal describe_instances_result[:dns_name], @instance.dns_name
       end
 
       should "grab the private_dns_name" do
-        assert_equal describe_instnaces_result[:private_dns_name], @instance.private_dns_name
+        assert_equal describe_instances_result[:private_dns_name], @instance.private_dns_name
       end
 
       should "grab the availability_zone" do
-        assert_equal describe_instnaces_result[:availability_zone], @instance.zone
+        assert_equal describe_instances_result[:availability_zone], @instance.zone
       end
     end
   end
 
+  context "Checking whether the aws state has changed" do
+    setup do
+      @environment.stubs(:has_database_server?).returns(true)
+      @instance = Factory(:instance, :environment => @environment)
+      Ec2.any_instance.stubs(:describe_instances).returns([describe_instances_result])
+    end
+
+    should "be aws_state_changed? if the aws state is different" do
+      assert @instance.aws_state_changed?
+    end
+
+    should "not be aws_state_changed? if the aws state is the same" do
+      @instance.stubs(:status).returns("running")
+      assert !@instance.aws_state_changed?
+    end
+  end
+
   protected
-    def describe_instnaces_result
+    def describe_instances_result
       {
         :dns_name              => "domU-12-34-67-89-01-C9.usma2.compute.amazonaws.com",
         :private_dns_name      => "domU-12-34-67-89-01-C9.usma2.compute.amazonaws.com",
