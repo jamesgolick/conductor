@@ -3,6 +3,10 @@ require File.expand_path('../../test_helper', __FILE__)
 class Ec2Test < Test::Unit::TestCase
   def setup
     Ec2.test_mode_calls = {}
+    File.stubs(:read).with(Rails.root.to_s + "/config/aws.yml").returns("
+test:
+  :access_key_id: test_access_key_id
+  :secret_access_key: test_secret_access_key")
   end
 
   context "In production mode" do
