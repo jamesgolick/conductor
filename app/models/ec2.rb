@@ -54,7 +54,7 @@ class Ec2
     def run_instances_test(opts)
       test_mode_calls[:run_instances] ||= []
       test_mode_calls[:run_instances] << opts
-      test_responses[:run_instances]
+      [test_responses[:run_instances]]
     end
 
     def terminate_instances_production(*instances)

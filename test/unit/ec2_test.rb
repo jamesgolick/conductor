@@ -49,7 +49,7 @@ test:
                :groups => ['default'],
                :keypair => 'conductor-key' }
 
-      assert_equal Ec2.test_responses[:run_instances], @ec2.run_instances(opts)
+      assert_equal [Ec2.test_responses[:run_instances]], @ec2.run_instances(opts)
       assert_equal opts, Ec2.test_mode_calls[:run_instances].first
     end
 
