@@ -93,7 +93,7 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
-  context "Checking the status of an instance" do
+  context "Updating the instance state" do
     context "going in to running" do
       setup do
         @environment.stubs(:has_database_server?).returns(true)
