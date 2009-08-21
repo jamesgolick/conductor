@@ -5,6 +5,7 @@ class InstanceTest < Test::Unit::TestCase
     Ec2.mode            = :test
     Ec2.test_mode_calls = {}
     @instance           = Factory(:mysql_master)
+    @environment        = Factory(:environment)
   end
 
   should_belong_to :environment
@@ -18,7 +19,6 @@ class InstanceTest < Test::Unit::TestCase
 
   context "When creating an app-server instance with no db server" do
     setup do
-      @environment = Factory(:environment)
       @instance = Factory.build(:app_server, :environment => @environment)
       @instance.save
     end
@@ -92,4 +92,41 @@ class InstanceTest < Test::Unit::TestCase
       @instance.destroy
     end
   end
+
+  context "Checking the status of an instance" do
+    context "going in to running" do
+      setup do
+        @environment.stubs(:has_database_server?).returns(true)
+        @instance = Factory(:instance, :environment => @environment)
+        Ec2.any_instance.stubs(:describe_instances).returns([describe_instnaces_result])
+        @instance.update_instance_state
+      end
+
+      should "set the state to running" do
+        assert_equal "running", @instance.status
+      end
+
+      should "grab the dns_name" do
+        assert_equal describe_instnaces_result[:dns_name], @instance.dns_name
+      end
+
+      should "grab the private_dns_name" do
+        assert_equal describe_instnaces_result[:private_dns_name], @instance.private_dns_name
+      end
+
+      should "grab the availability_zone" do
+        assert_equal describe_instnaces_result[:availability_zone], @instance.zone
+      end
+    end
+  end
+
+  protected
+    def describe_instnaces_result
+      {
+        :dns_name              => "domU-12-34-67-89-01-C9.usma2.compute.amazonaws.com",
+        :private_dns_name      => "domU-12-34-67-89-01-C9.usma2.compute.amazonaws.com",
+        :aws_availability_zone => "us-east-1c",
+        :aws_state             => "running"
+      }
+    end
 end

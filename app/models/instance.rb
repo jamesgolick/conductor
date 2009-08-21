@@ -29,6 +29,14 @@ class Instance < ActiveRecord::Base
     update_attribute :status, 'bootstrapped'
   end
 
+  def update_instance_state
+    details = ec2.describe_instances(instance_id).first
+    update_attributes :dns_name         => details[:dns_name],
+                      :private_dns_name => details[:private_dns_name],
+                      :zone             => details[:availability_zone],
+                      :status           => details[:aws_state]
+  end
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?
