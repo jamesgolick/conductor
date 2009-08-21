@@ -11,9 +11,9 @@ end
 
 Factory.define :instance do |i|
   i.association :environment
-  i.size "m1_small"
+  i.size "m1.small"
   i.role "app_server"
-  i.zone "us_east_1c"
+  i.zone "us-east-1c"
 end
 
 Factory.define :app_server, :parent => :instance do

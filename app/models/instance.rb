@@ -9,9 +9,9 @@ class Instance < ActiveRecord::Base
   has_many   :chef_logs
   delegate   :application, :to => :environment
 
-  enum_field :size,   %w( m1_small m1_large m1_xlarge c1_medium c1_xlarge )
+  enum_field :size,   %w( m1.small m1.large m1.xlarge c1.medium c1.xlarge )
   enum_field :role,   %w( mysql_master app_server )
-  enum_field :zone,   %w( us_east_1a us_east_1b us_east_1c us_east_1d )
+  enum_field :zone,   %w( us-east-1a us-east-1b us-east-1c us-east-1d )
   enum_field :status, %w( pending running bootstrapped ), :allow_nil => true
 
   validate :database_server_is_running
