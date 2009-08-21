@@ -16,7 +16,7 @@ class Instance < ActiveRecord::Base
 
   validate :database_server_is_running
 
-  after_create   :launch_ec2_instance
+  after_create   :launch_ec2_instance, :launch_wait_for_state_change_job
   before_destroy :terminate_ec2_instance
 
   def bootstrapped!
@@ -71,5 +71,9 @@ class Instance < ActiveRecord::Base
 
     def aws_instance_details
       ec2.describe_instances(instance_id).first
+    end
+
+    def launch_wait_for_state_change_job
+      send_later(:wait_for_state_change)
     end
 end

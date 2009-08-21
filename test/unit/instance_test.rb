@@ -35,27 +35,37 @@ class InstanceTest < Test::Unit::TestCase
   context "After creating an instance" do
     setup do
       @instance = Factory.build(:mysql_master)
+    end
+
+    context "launching the ec2 instance" do
+      setup do
+        @instance.save
+      end
+
+      should "create the instance on ec2" do
+        expected_launch_params = {
+          :groups  => ['default'],
+          :keypair => 'conductor-keypair',
+          :ami     => Instance.ami_for(@instance.size),
+          :instance_type => @instance.size,
+          :availability_zone => @instance.zone
+        }
+        assert_equal expected_launch_params, Ec2.test_mode_calls[:run_instances].first
+      end
+      
+      should "save the instance_id that it gets from amazon" do
+        id = Ec2.test_responses[:run_instances][:aws_instance_id]
+        assert_equal id, @instance.instance_id
+      end
+
+      should "have a status of pending" do
+        assert_equal 'pending', @instance.status
+      end
+    end
+
+    should "fire off a job to wait for state change" do
+      @instance.expects(:send_later).with(:wait_for_state_change)
       @instance.save
-    end
-
-    should "create the instance on ec2" do
-      expected_launch_params = {
-        :groups  => ['default'],
-        :keypair => 'conductor-keypair',
-        :ami     => Instance.ami_for(@instance.size),
-        :instance_type => @instance.size,
-        :availability_zone => @instance.zone
-      }
-      assert_equal expected_launch_params, Ec2.test_mode_calls[:run_instances].first
-    end
-    
-    should "save the instance_id that it gets from amazon" do
-      id = Ec2.test_responses[:run_instances][:aws_instance_id]
-      assert_equal id, @instance.instance_id
-    end
-
-    should "have a status of pending" do
-      assert_equal 'pending', @instance.status
     end
   end
 
