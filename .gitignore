@@ -3,3 +3,4 @@ log/*.log
 db/*.sqlite3
 cookbook_repositories/
 spike.rb
+config/aws.yml
