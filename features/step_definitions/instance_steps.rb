@@ -8,8 +8,8 @@ When /^I create an? "(.+)" instance$/ do |type|
   visit application_environment_url(env.application, env)
   click_link "Launch Instance"
   select type,         :from => "Role"
-  select "c1_medium",  :from => "Size"
-  select "us_east_1c", :from => "Availability Zone"
+  select "c1.medium",  :from => "Size"
+  select "us-east-1c", :from => "Availability Zone"
   click_button "Launch"
 end
 
