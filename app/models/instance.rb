@@ -19,12 +19,6 @@ class Instance < ActiveRecord::Base
   after_create   :launch_ec2_instance
   before_destroy :terminate_ec2_instance
 
-  def running!(attrs)
-    update_attributes :dns_name         => attrs[:dns_name],
-                      :private_dns_name => attrs[:private_dns_name],
-                      :status           => 'running'
-  end
-
   def bootstrapped!
     update_attribute :status, 'bootstrapped'
   end
