@@ -41,6 +41,15 @@ class Instance < ActiveRecord::Base
     aws_instance_details[:aws_state] != status
   end
 
+  def wait_for_state_change
+    while true do
+      if aws_state_changed?
+        update_instance_state
+        break
+      end
+    end
+  end
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?
