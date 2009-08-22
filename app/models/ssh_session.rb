@@ -1,19 +1,23 @@
 require 'net/ssh'
 
 class SshSession
-  attr_reader :ssh
+  attr_reader :ssh, :host
 
-  def initialize(host, &block)
-    username, host = host.split('@')
-    Net::SSH.start(host, username) do |ssh|
-      @ssh = ssh
-      instance_eval(&block) if block_given?
-      ssh.loop
-    end
+  def initialize(host)
+    @ssh  = Net::SSH::Multi.start
+    @host = host
+    ssh.use(host)
   end
 
-  def run(cmd)
-    ssh.exec(cmd)
+  def run(command)
+    log = ""
+
+    channel = ssh.exec(command) do |channel, stream, data|
+      log << "[#{channel[:host]} #{stream.to_s.upcase}]: #{data}\n"
+    end
+    ssh.loop
+
+    CommandResult.new(host, log, channel[:exit_status])
   end
 end
 
