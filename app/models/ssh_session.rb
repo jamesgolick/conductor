@@ -1,4 +1,5 @@
 require 'net/ssh'
+require 'net/sftp'
 
 class SshSession
   attr_reader :ssh, :host
@@ -19,5 +20,22 @@ class SshSession
 
     CommandResult.new(host, log, channel[:exit_status])
   end
+
+  def upload(file)
+    sftp.upload!(file, file)
+  end
+
+  protected
+    def sftp
+      @sftp ||= Net::SFTP.start(hostname, username)
+    end
+
+    def hostname
+      host.split("@").last
+    end
+
+    def username
+      host.split("@").first
+    end
 end
 

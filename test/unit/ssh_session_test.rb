@@ -35,4 +35,23 @@ class SshSessionTest < Test::Unit::TestCase
       assert_equal "james@myserver.com", @result.host
     end
   end
+
+  context "Running an SFTP command" do
+    setup do
+      @session = SshSession.new("james@myserver.com")
+    end
+
+    should "split the user from the host before passing it to net/sftp" do
+      Net::SFTP.expects(:start).with("myserver.com", "james").returns(stub_everything)
+      @session.upload("some_file")
+    end
+
+    should "upload the file immediately via sftp" do
+      session_mock = mock
+      session_mock.expects(:upload!).with("somefile", "somefile")
+      Net::SFTP.stubs(:start).returns(session_mock)
+
+      @session.upload("somefile")
+    end
+  end
 end
