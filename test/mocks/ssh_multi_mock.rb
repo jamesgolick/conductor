@@ -1,9 +1,10 @@
 class SSHMultiMock
-  attr_reader :servers_used, :responses
+  attr_reader :servers_used, :responses, :exit_codes
 
   def initialize
     @servers_used = []
     @responses    = {}
+    @exit_codes   = {}
   end
 
   def use(host)
@@ -15,10 +16,18 @@ class SSHMultiMock
     responses[command] << response
   end
 
+  def set_exit_code(command, code)
+    exit_codes[command] = code
+  end
+
   def exec(command, &block)
     responses[command].each do |response|
       block.call(*response)
     end
+
+    {:exit_status => exit_codes[command]}
   end
+
+  def loop; end
 end
 

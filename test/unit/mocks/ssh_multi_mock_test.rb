@@ -31,4 +31,16 @@ class SSHMultiMockTestTest < ActiveSupport::TestCase
       assert_equal [{:host => "whatever"}, :stderr, "the stderr data"], calls[1]
     end
   end
+
+  should "have a loop method that just does nothing" do
+    assert_respond_to @ssh, :loop
+  end
+
+  should "return a substitute for a channel object on exec" do
+    @ssh.set_exit_code "asdf", 127
+    @ssh.add_command_response "asdf", {:host => "whatever"}, :stdout, "the stdout data"
+    channel = @ssh.exec("asdf") { |a,b,c| }
+
+    assert_equal 127, channel[:exit_status]
+  end
 end
