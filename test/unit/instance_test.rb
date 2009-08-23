@@ -58,8 +58,8 @@ class InstanceTest < Test::Unit::TestCase
         assert_equal id, @instance.instance_id
       end
 
-      should "have a status of pending" do
-        assert_equal 'pending', @instance.status
+      should "have a state of pending" do
+        assert_equal 'pending', @instance.state
       end
     end
 
@@ -70,7 +70,7 @@ class InstanceTest < Test::Unit::TestCase
   end
 
   context "Setting an instance as bootstrapped" do
-    should "set the status to bootstrapped" do
+    should "set the state to bootstrapped" do
       @instance = Factory(:running_instance)
       @instance.bootstrapped!
       assert @instance.bootstrapped?
@@ -94,7 +94,7 @@ class InstanceTest < Test::Unit::TestCase
       end
 
       should "set the state to running" do
-        assert_equal "running", @instance.status
+        assert_equal "running", @instance.state
       end
 
       should "grab the dns_name" do
@@ -123,7 +123,7 @@ class InstanceTest < Test::Unit::TestCase
     end
 
     should "not be aws_state_changed? if the aws state is the same" do
-      @instance.stubs(:status).returns("running")
+      @instance.stubs(:state).returns("running")
       assert !@instance.aws_state_changed?
     end
   end

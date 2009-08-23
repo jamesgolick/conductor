@@ -24,7 +24,7 @@ Factory.define :mysql_master, :parent => :instance do |m|
 end
 
 Factory.define :running_instance, :parent => :instance do |m|
-  m.status "running"
+  m.state "running"
   m.role "mysql_master"
   m.dns_name "123.amazonaws.com"
   m.private_dns_name "private.internal.amzn.com"

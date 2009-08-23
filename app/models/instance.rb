@@ -13,7 +13,7 @@ class Instance < ActiveRecord::Base
   enum_field :size,   %w( m1.small m1.large m1.xlarge c1.medium c1.xlarge )
   enum_field :role,   %w( mysql_master app_server )
   enum_field :zone,   %w( us-east-1a us-east-1b us-east-1c us-east-1d )
-  enum_field :status, %w( pending running bootstrapped ), :allow_nil => true
+  enum_field :state,  %w( pending running bootstrapped ), :allow_nil => true
 
   validate :database_server_is_running
 
@@ -21,7 +21,7 @@ class Instance < ActiveRecord::Base
   before_destroy :terminate_ec2_instance
 
   def bootstrapped!
-    update_attribute :status, 'bootstrapped'
+    update_attribute :state, 'bootstrapped'
   end
 
   def update_instance_state
@@ -29,11 +29,11 @@ class Instance < ActiveRecord::Base
     update_attributes :dns_name         => details[:dns_name],
                       :private_dns_name => details[:private_dns_name],
                       :zone             => details[:aws_availability_zone],
-                      :status           => details[:aws_state]
+                      :state            => details[:aws_state]
   end
 
   def aws_state_changed?
-    aws_instance_details[:aws_state] != status
+    aws_instance_details[:aws_state] != state
   end
 
   def wait_for_state_change
@@ -63,7 +63,7 @@ class Instance < ActiveRecord::Base
                                    :instance_type     => size,
                                    :availability_zone => zone
       update_attributes :instance_id => instance.first[:aws_instance_id],
-                        :status      => 'pending'
+                        :state       => 'pending'
     end
 
     def terminate_ec2_instance
