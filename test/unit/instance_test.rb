@@ -69,14 +69,6 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
-  context "Setting an instance as bootstrapped" do
-    should "set the status to bootstrapped" do
-      @instance = Factory(:running_instance)
-      @instance.bootstrapped!
-      assert @instance.bootstrapped?
-    end
-  end
-
   context "After destroying an instances" do
     should "ask ec2 to destroy it" do
       Ec2.any_instance.expects(:terminate_instances).with(@instance.instance_id)
