@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090821154249) do
+ActiveRecord::Schema.define(:version => 20090823134716) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
@@ -36,6 +36,14 @@ ActiveRecord::Schema.define(:version => 20090821154249) do
     t.datetime "locked_at"
     t.datetime "failed_at"
     t.string   "locked_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "deployments", :force => true do |t|
+    t.string   "type"
+    t.integer  "instance_id"
+    t.text     "log"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
