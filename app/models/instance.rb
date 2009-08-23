@@ -20,6 +20,10 @@ class Instance < ActiveRecord::Base
   after_create   :launch_ec2_instance, :launch_wait_for_state_change_job
   before_destroy :terminate_ec2_instance
 
+  def bootstrapped!
+    update_attribute :status, 'bootstrapped'
+  end
+
   def update_instance_state
     details = aws_instance_details
     update_attributes :dns_name         => details[:dns_name],
