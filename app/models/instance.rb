@@ -41,6 +41,10 @@ class Instance < ActiveRecord::Base
     end
   end
 
+  def connection_string
+    "root@#{dns_name}"
+  end
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?
