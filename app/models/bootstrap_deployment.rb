@@ -17,6 +17,7 @@ class BootstrapDeployment < Deployment
 
   belongs_to    :instance
   before_create :run_commands
+  after_create  :notify_instance, :if => :successful?
 
   def successful?
     exit_code == 0
@@ -31,6 +32,10 @@ class BootstrapDeployment < Deployment
 
     def ssh
       @ssh ||= SshSession.new(instance.connection_string)
+    end
+
+    def notify_instance
+      instance.bootstrapped!
     end
 end
 
