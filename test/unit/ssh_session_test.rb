@@ -4,7 +4,8 @@ require 'test/mocks/ssh_multi_mock'
 class SshSessionTest < Test::Unit::TestCase
   context "Initializing an SSH session" do
     should "tell the ssh session to use all of the hosts" do
-      Net::SSH::Multi::Session.any_instance.expects(:use).with("james@myserver.com")
+      Net::SSH::Multi::Session.any_instance.
+        expects(:use).with("james@myserver.com", :forward_agent => true)
       SshSession.new("james@myserver.com")
     end
   end

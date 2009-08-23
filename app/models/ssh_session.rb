@@ -7,7 +7,7 @@ class SshSession
   def initialize(host)
     @ssh  = Net::SSH::Multi.start
     @host = host
-    ssh.use(host)
+    ssh.use(host, :forward_agent => true)
   end
 
   def run(command)
