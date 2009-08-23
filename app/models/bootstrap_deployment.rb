@@ -12,8 +12,9 @@ class BootstrapDeployment < Deployment
 
   protected
     def run_commands
-      result   = ssh.run(self.class.command)
-      self.log = result.log
+      result         = ssh.run(self.class.command)
+      self.log       = result.log
+      self.exit_code = result.exit_code
     end
 
     def ssh

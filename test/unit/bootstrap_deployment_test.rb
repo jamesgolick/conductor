@@ -27,5 +27,12 @@ class BootstrapDeploymentTest < ActiveSupport::TestCase
 
       assert_equal "the log", @deployment.log
     end
+
+    should "store the exit code of the session" do
+      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
+      @deployment  = @instance.bootstrap_deployments.create
+
+      assert_equal 127, @deployment.exit_code
+    end
   end
 end
