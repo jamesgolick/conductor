@@ -85,10 +85,13 @@ class InstanceTest < Test::Unit::TestCase
   end
 
   context "Updating the instance state" do
+    setup do
+      @environment.stubs(:has_database_server?).returns(true)
+      @instance = Factory(:instance, :environment => @environment)
+    end
+
     context "going in to running" do
       setup do
-        @environment.stubs(:has_database_server?).returns(true)
-        @instance = Factory(:instance, :environment => @environment)
         Ec2.any_instance.stubs(:describe_instances).returns([describe_instances_result])
         @instance.update_instance_state
       end
@@ -108,6 +111,10 @@ class InstanceTest < Test::Unit::TestCase
       should "grab the availability_zone" do
         assert_equal describe_instances_result[:aws_availability_zone], @instance.zone
       end
+
+      before_should "start the bootstrapping job" do
+        @instance.expects(:send_later).with(:bootstrap)
+      end
     end
   end
 
@@ -125,6 +132,14 @@ class InstanceTest < Test::Unit::TestCase
     should "not be aws_state_changed? if the aws state is the same" do
       @instance.stubs(:state).returns("running")
       assert !@instance.aws_state_changed?
+    end
+  end
+
+  context "Asking an instance to bootstrap" do
+    should "create a bootstrap deployment" do
+      @instance = Factory(:instance, :role => "mysql_master")
+      @instance.stubs(:bootstrap_deployments).returns(mock(:create => nil))
+      @instance.bootstrap
     end
   end
 

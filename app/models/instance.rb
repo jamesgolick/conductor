@@ -30,6 +30,7 @@ class Instance < ActiveRecord::Base
                       :private_dns_name => details[:private_dns_name],
                       :zone             => details[:aws_availability_zone],
                       :state            => details[:aws_state]
+    launch_bootstrap_job if running?
   end
 
   def aws_state_changed?
@@ -47,6 +48,10 @@ class Instance < ActiveRecord::Base
 
   def connection_string
     "root@#{dns_name}"
+  end
+
+  def bootstrap
+    bootstrap_deployments.create
   end
 
   protected
@@ -80,5 +85,9 @@ class Instance < ActiveRecord::Base
 
     def launch_wait_for_state_change_job
       send_later(:wait_for_state_change)
+    end
+
+    def launch_bootstrap_job
+      send_later(:bootstrap)
     end
 end
