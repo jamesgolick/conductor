@@ -4,6 +4,7 @@ class BootstrapDeploymentTest < ActiveSupport::TestCase
   def setup
     Ec2.mode = :test
   end 
+
   context "If the deployment is successful" do
     should "notify the instance that it has been bootstrapped" do
       @deployment = BootstrapDeployment.new :exit_code => 0
