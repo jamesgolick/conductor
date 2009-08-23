@@ -35,4 +35,14 @@ class BootstrapDeploymentTest < ActiveSupport::TestCase
       assert_equal 127, @deployment.exit_code
     end
   end
+
+  should "be successful if the exit code is 0" do
+    @deployment = BootstrapDeployment.new :exit_code => 0
+    assert @deployment.successful?
+  end
+
+  should "not be successful if the exit code is not 0" do
+    @deployment = BootstrapDeployment.new :exit_code => 127
+    assert !@deployment.successful?
+  end
 end

@@ -10,6 +10,10 @@ class BootstrapDeployment < Deployment
   belongs_to    :instance
   before_create :run_commands
 
+  def successful?
+    exit_code == 0
+  end
+
   protected
     def run_commands
       result         = ssh.run(self.class.command)
