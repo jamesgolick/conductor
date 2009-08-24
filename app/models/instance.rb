@@ -24,6 +24,9 @@ class Instance < ActiveRecord::Base
   after_create   :launch_ec2_instance, :launch_wait_for_state_change_job
   before_destroy :terminate_ec2_instance
 
+  named_scope    :running,    :conditions => {:aws_state    => "running"}
+  named_scope    :configured, :conditions => {:config_state => "deployed"}
+
   def bootstrapped!
     update_attribute :config_state, 'bootstrapped'
     deploy
