@@ -14,7 +14,7 @@ class Instance < ActiveRecord::Base
   enum_field :role,         %w( mysql_master app_server )
   enum_field :zone,         %w( us-east-1a us-east-1b us-east-1c us-east-1d )
   enum_field :aws_state,    %w( pending running ),              :allow_nil => true
-  enum_field :config_state, %w( unconfigured bootstrapping bootstrapped ), :allow_nil => true
+  enum_field :config_state, %w( unconfigured bootstrapping bootstrapped deploying deployed ), :allow_nil => true
 
   validate :database_server_is_running
 
@@ -23,6 +23,18 @@ class Instance < ActiveRecord::Base
 
   def bootstrapped!
     update_attribute :config_state, 'bootstrapped'
+  end
+
+  def bootstrapping!
+    update_attribute :config_state, 'bootstrapping'
+  end
+
+  def deploying!
+    update_attribute :config_state, "deploying"
+  end
+
+  def deployed!
+    update_attribute :config_state, "deployed"
   end
 
   def update_instance_state
@@ -100,6 +112,5 @@ class Instance < ActiveRecord::Base
 
     def launch_bootstrap_job
       send_later(:bootstrap)
-      update_attribute :config_state, 'bootstrapping'
     end
 end

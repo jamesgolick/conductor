@@ -81,6 +81,30 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  context "Setting an instance as bootstrapping" do
+    should "set the config_state to bootstrapping" do
+      @instance = Factory(:running_instance)
+      @instance.bootstrapping!
+      assert @instance.bootstrapping?
+    end
+  end
+
+  context "Setting an instance as deployed" do
+    should "set the config_state to deployed" do
+      @instance = Factory(:running_instance)
+      @instance.deployed!
+      assert @instance.deployed?
+    end
+  end
+
+  context "Setting an instance as deploying" do
+    should "set the config_state to deploying" do
+      @instance = Factory(:running_instance)
+      @instance.deploying!
+      assert @instance.deploying?
+    end
+  end
+
   context "After destroying an instances" do
     should "ask ec2 to destroy it" do
       Ec2.any_instance.expects(:terminate_instances).with(@instance.instance_id)
@@ -118,10 +142,6 @@ class InstanceTest < Test::Unit::TestCase
 
       before_should "start the bootstrapping job" do
         @instance.expects(:send_later).with(:bootstrap)
-      end
-
-      should "change the config state to bootstrapping" do
-        assert @instance.bootstrapping?
       end
     end
   end
