@@ -5,13 +5,11 @@ class BootstrapDeploymentTest < ActiveSupport::TestCase
     Ec2.mode = :test
   end 
 
-  context "If the deployment is successful" do
-    should "notify the instance that it has been bootstrapped" do
-      @deployment = BootstrapDeployment.new :exit_code => 0
-      @deployment.stubs(:run_commands)
-      @deployment.stubs(:successful).returns(true)
-      @deployment.stubs(:instance).returns(mock(:bootstrapped! => nil))
-      @deployment.save
-    end
+  should "notify the instance appropriately" do
+    @deployment = BootstrapDeployment.new :exit_code => 0
+    @deployment.stubs(:run_commands)
+    @deployment.stubs(:successful).returns(true)
+    @deployment.stubs(:instance).returns(mock(:bootstrapped! => nil, :bootstrapping! => nil))
+    @deployment.save
   end
 end
