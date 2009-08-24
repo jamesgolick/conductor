@@ -5,7 +5,7 @@
 <ul>
   <% @environment.instances.each do |i| -%>
     <li>
-      <%= i.role %> (<%= i.state %>, <%= i.size %>, <%= i.instance_id %>)
+      <%= i.role %> (<%= i.aws_state %>, <%= i.config_state %>, <%= i.size %>, <%= i.instance_id %>)
       <% if i.running? || i.bootstrapped? -%>
         <%= link_to i.dns_name, "http://#{i.dns_name}" %>
       <% end -%>
