@@ -55,4 +55,18 @@ class SshSessionTest < Test::Unit::TestCase
       @session.upload("somefile")
     end
   end
+
+  context "Putting a string via sftp" do
+    should "put the file using net/sftp" do
+      @session = SshSession.new("james@myserver.com")
+      open_file_stub = stub
+      open_file_stub.expects(:puts).with("the value")
+      file_stub      = stub
+      file_stub.expects(:open).with("/etc/chef/dna.json", "w").yields(open_file_stub)
+      sftp_stub      = stub
+      sftp_stub.stubs(:file).returns(file_stub)
+      @session.stubs(:sftp).returns(sftp_stub)
+      @session.put("the value", "/etc/chef/dna.json")
+    end
+  end
 end

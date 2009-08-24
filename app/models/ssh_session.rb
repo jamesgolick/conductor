@@ -25,6 +25,12 @@ class SshSession
     sftp.upload!(file, file)
   end
 
+  def put(value, location)
+    sftp.file.open(location, "w") do |f|
+      f.puts value
+    end
+  end
+
   protected
     def sftp
       @sftp ||= Net::SFTP.start(hostname, username)
