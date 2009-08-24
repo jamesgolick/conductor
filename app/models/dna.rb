@@ -1,3 +1,5 @@
+require 'json/pure'
+
 class Dna < HashWithIndifferentAccess
   attr_reader :cookbook, :role
 
