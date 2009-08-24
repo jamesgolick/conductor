@@ -3,6 +3,7 @@ require File.expand_path('../../test_helper', __FILE__)
 class DeploymentTest < ActiveSupport::TestCase
   def setup
     Ec2.mode = :test
+    Deployment.any_instance.stubs(:notify_instance_of_start)
   end 
 
   context "Creating a deployment" do
@@ -34,6 +35,14 @@ class DeploymentTest < ActiveSupport::TestCase
       @deployment = Deployment.create :instance => @instance
 
       assert_equal 127, @deployment.exit_code
+    end
+
+    should "call #notify_instance_of_start before create" do
+      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
+      @deployment = Deployment.create :instance => @instance
+      @deployment = Deployment.new :instance => @instance
+      @deployment.expects(:notify_instance_of_start)
+      @deployment.send(:callback, :before_create)
     end
   end
 

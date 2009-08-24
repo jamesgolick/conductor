@@ -2,7 +2,7 @@ class Deployment < ActiveRecord::Base
   class_inheritable_accessor :command
 
   belongs_to    :instance
-  before_create :run_commands
+  before_create :notify_instance_of_start, :run_commands
   after_create  :notify_instance, :if => :successful?
 
   def successful?
@@ -22,5 +22,9 @@ class Deployment < ActiveRecord::Base
 
     def notify_instance
       raise NotImplementedError, "#notify_instnace needs to be implemented per subclass of Deployment"
+    end
+
+    def notify_instance_of_start
+      raise NotImplementedError, "#notify_instance_of_start needs to be implemented per subclass of Deployment"
     end
 end
