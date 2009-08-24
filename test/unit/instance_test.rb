@@ -73,9 +73,18 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
-  context "Setting an instance as bootstrapped" do
-    should "set the config_state to bootstrapped" do
+  context "starting the deployment" do
+    should "create a chef deployment" do
       @instance = Factory(:running_instance)
+      @instance.stubs(:chef_deployments).returns(mock(:create => nil))
+      @instance.start_deployment
+    end
+  end
+
+  context "Setting an instance as bootstrapped" do
+    should "set the config_state to bootstrapped and start deploying" do
+      @instance = Factory(:running_instance)
+      @instance.expects(:send_later).with(:start_deployment)
       @instance.bootstrapped!
       assert @instance.bootstrapped?
     end

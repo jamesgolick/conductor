@@ -8,6 +8,7 @@ class Instance < ActiveRecord::Base
   belongs_to :environment
   has_many   :chef_logs
   has_many   :bootstrap_deployments
+  has_many   :chef_deployments
   delegate   :application, :to => :environment
 
   enum_field :size,         %w( m1.small m1.large m1.xlarge c1.medium c1.xlarge )
@@ -23,6 +24,7 @@ class Instance < ActiveRecord::Base
 
   def bootstrapped!
     update_attribute :config_state, 'bootstrapped'
+    send_later :start_deployment
   end
 
   def bootstrapping!
@@ -74,6 +76,10 @@ class Instance < ActiveRecord::Base
 
   def dna
     @dna ||= Dna.new(role, cookbook_repository)
+  end
+
+  def start_deployment
+    chef_deployments.create
   end
 
   protected
