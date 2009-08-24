@@ -16,4 +16,12 @@ class Environment < ActiveRecord::Base
   def has_database_server?
     instances.any?(&:mysql_master?)
   end
+
+  def to_dna
+    {
+      :apps      => [application.name],
+      :rails_env => name,
+      :servers   => instances.to_dna
+    }
+  end
 end

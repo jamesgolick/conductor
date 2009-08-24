@@ -52,4 +52,26 @@ class EnvironmentTest < Test::Unit::TestCase
       assert_equal expected, @environment.instances.to_dna
     end
   end
+
+  context "Getting the environment as dna" do
+    setup do
+      @environment = Factory(:environment)
+
+      @db = Factory(:mysql_master, :environment      => @environment,
+                                   :private_dns_name => "db.local")
+      @db.update_attribute :aws_state, "running"
+    end
+
+    should "include the application name" do
+      assert_equal @environment.application.name, @environment.to_dna[:apps].first
+    end
+
+    should "include the instances dna" do
+      assert_equal @environment.instances.to_dna, @environment.to_dna[:servers]
+    end
+
+    should "include the rails_env" do
+      assert_equal @environment.name, @environment.to_dna[:rails_env]
+    end
+  end
 end
