@@ -143,6 +143,15 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  context "An instance's dna" do
+    should "delegate to dna with its role and cookbook repository" do
+      CookbookRepository.any_instance.stubs(:clone).stubs(:pull)
+      @instance = Factory(:instance, :role => "mysql_master")
+      Dna.expects(:new).with(@instance.role, @instance.cookbook_repository)
+      @instance.dna
+    end
+  end
+
   protected
     def describe_instances_result
       {

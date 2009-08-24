@@ -54,6 +54,15 @@ class Instance < ActiveRecord::Base
     bootstrap_deployments.create
   end
 
+  # TODO: do something way better with this
+  def cookbook_repository
+    @cookbook_repository ||= CookbookRepository.new("git@github.com:giraffesoft/conductor-cookbooks.git")
+  end
+
+  def dna
+    @dna ||= Dna.new(role, cookbook_repository)
+  end
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?
