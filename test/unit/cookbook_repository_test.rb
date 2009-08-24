@@ -23,4 +23,14 @@ class CookbookRepositoryTest < ActiveSupport::TestCase
       @repo = CookbookRepository.new("git@github.com:giraffesoft/conductor-cookbooks.git")
     end
   end
+
+  context "Retrieving a file from the cookbook repository" do
+    should "read the file from the repo location" do
+      clone_location = "#{Rails.root}/cookbook-repo"
+      File.stubs(:read).with(clone_location + "/attributes.rb").returns("value of attributes.rb")
+      CookbookRepository.any_instance.stubs(:`)
+      @repo = CookbookRepository.new("git@github.com:giraffesoft/conductor-cookbooks.git")
+      assert_equal "value of attributes.rb", @repo.read("attributes.rb")
+    end
+  end
 end

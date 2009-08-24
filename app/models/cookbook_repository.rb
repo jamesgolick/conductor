@@ -6,6 +6,10 @@ class CookbookRepository
     clone_exists? ? pull : clone
   end
 
+  def read(file)
+    File.read(clone_location + "/#{file}")
+  end
+
   protected
     def clone_exists?
       File.directory?(clone_location + "/.git")
