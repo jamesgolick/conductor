@@ -7,6 +7,7 @@ end
 Factory.define :environment do |e|
   e.association :application
   e.name "production"
+  e.domain "mysite.com"
 end
 
 Factory.define :instance do |i|

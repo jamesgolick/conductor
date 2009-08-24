@@ -12,6 +12,7 @@ class Environment < ActiveRecord::Base
   end
 
   validates_presence_of :name
+  validates_presence_of :domain
 
   def has_database_server?
     instances.any?(&:mysql_master?)
