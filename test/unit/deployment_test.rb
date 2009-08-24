@@ -4,6 +4,8 @@ class DeploymentTest < ActiveSupport::TestCase
   def setup
     Ec2.mode = :test
     Deployment.any_instance.stubs(:notify_instance_of_start)
+    Deployment.any_instance.stubs(:notify_instance_of_failure)
+    Deployment.any_instance.stubs(:notify_instance_of_success)
   end 
 
   context "Creating a deployment" do
@@ -45,6 +47,20 @@ class DeploymentTest < ActiveSupport::TestCase
       @deployment = Deployment.create :instance => @instance
       @deployment = Deployment.new :instance => @instance
       @deployment.expects(:notify_instance_of_start)
+      @deployment.perform_deployment
+    end
+
+    should "call #notify_instance_of_success if the deployment is successful" do
+      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 0))
+      Deployment.any_instance.expects(:notify_instance_of_success)
+      @deployment = Deployment.new :instance => @instance
+      @deployment.perform_deployment
+    end
+
+    should "call #notify_instance_of_success if the deployment is successful" do
+      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
+      Deployment.any_instance.expects(:notify_instance_of_failure)
+      @deployment = Deployment.new :instance => @instance
       @deployment.perform_deployment
     end
   end

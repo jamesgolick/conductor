@@ -11,7 +11,7 @@ class Deployment < ActiveRecord::Base
   def perform_deployment
     notify_instance_of_start
     run_commands
-    notify_instance if successful?
+    successful? ? notify_instance_of_success : notify_instance_of_failure
   end
 
   protected
@@ -25,11 +25,15 @@ class Deployment < ActiveRecord::Base
       @ssh ||= SshSession.new(instance.connection_string)
     end
 
-    def notify_instance
+    def notify_instance_of_success
       raise NotImplementedError, "#notify_instnace needs to be implemented per subclass of Deployment"
     end
 
     def notify_instance_of_start
+      raise NotImplementedError, "#notify_instance_of_start needs to be implemented per subclass of Deployment"
+    end
+
+    def notify_instance_of_failure
       raise NotImplementedError, "#notify_instance_of_start needs to be implemented per subclass of Deployment"
     end
 
