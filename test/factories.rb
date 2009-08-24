@@ -12,7 +12,7 @@ end
 Factory.define :instance do |i|
   i.association :environment
   i.size "m1.small"
-  i.role "app_server"
+  i.role "app"
   i.zone "us-east-1c"
 end
 

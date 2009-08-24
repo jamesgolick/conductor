@@ -12,7 +12,7 @@ class Instance < ActiveRecord::Base
   delegate   :application, :to => :environment
 
   enum_field :size,         %w( m1.small m1.large m1.xlarge c1.medium c1.xlarge )
-  enum_field :role,         %w( mysql_master app_server )
+  enum_field :role,         %w( mysql_master app )
   enum_field :zone,         %w( us-east-1a us-east-1b us-east-1c us-east-1d )
   enum_field :aws_state,    %w( pending running ),              :allow_nil => true
   enum_field :config_state, %w( unconfigured bootstrapping bootstrapped 
