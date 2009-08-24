@@ -3,7 +3,7 @@ class ChefDeployment < Deployment
     source /etc/environment &&
       cd /var/chef &&
         git pull && 
-          /opt/ruby-enterprise/bin/chef-solo -j /etc/chef/dna.json"
+          sudo env SSH_AUTH_SOCK=$SSH_AUTH_SOCK bash -c 'source /etc/environment && /opt/ruby-enterprise/bin/chef-solo -j /etc/chef/dna.json'"
 
   def run_commands
     put_dna
