@@ -12,7 +12,7 @@ class BootstrapDeployment < Deployment
              /var/chef/bootstrap/bootstrap.sh "
 
   protected
-    def notify_instance
+    def notify_instance_of_success
       instance.bootstrapped!
     end
 
