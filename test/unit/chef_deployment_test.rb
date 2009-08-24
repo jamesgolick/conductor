@@ -7,23 +7,31 @@ class ChefDeploymentTest < ActiveSupport::TestCase
     CookbookRepository.any_instance.stubs(:read).returns("")
   end
 
-  context "Creating a chef deployment" do
+  context "Performing a chef deployment" do
     should "create and upload DNA for that instance" do
       @instance   = Factory(:instance, :role => "mysql_master")
       @deployment = ChefDeployment.new :instance => @instance
       @deployment.send(:ssh).expects(:put).with(@instance.dna.to_json, "/etc/chef/dna.json")
       @deployment.send(:ssh).stubs(:run).returns(CommandResult.new("whatever", "", 0))
-      @deployment.save
+      @deployment.perform_deployment
     end
   end
 
-  should "notify the instance appropriately" do
-    @instance   = Factory(:instance, :role => "mysql_master")
+  should "notify the instance on start" do
+    @instance = Factory(:instance, :role => "mysql_master")
     @instance.expects(:deploying!)
+    ChefDeployment.new(:instance => @instance).send(:notify_instance_of_start)
+  end
+  
+  should "notify the instance on success" do
+    @instance = Factory(:instance, :role => "mysql_master")
     @instance.expects(:deployed!)
-    @deployment = ChefDeployment.new :instance => @instance
-    @deployment.stubs(:run_commands)
-    @deployment.stubs(:successful?).returns(true)
-    @deployment.save!
+    ChefDeployment.new(:instance => @instance).send(:notify_instance_of_success)
+  end
+  
+  should "notify the instance on failure" do
+    @instance = Factory(:instance, :role => "mysql_master")
+    @instance.expects(:deployment_failed!)
+    ChefDeployment.new(:instance => @instance).send(:notify_instance_of_failure)
   end
 end

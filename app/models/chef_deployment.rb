@@ -11,8 +11,12 @@ class ChefDeployment < Deployment
   end
 
   protected
-    def notify_instance
+    def notify_instance_of_success
       instance.deployed!
+    end
+
+    def notify_instance_of_failure
+      instance.deployment_failed!
     end
 
     def notify_instance_of_start
