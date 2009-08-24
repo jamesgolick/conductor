@@ -54,7 +54,7 @@ class Instance < ActiveRecord::Base
     bootstrap_deployments.create
   end
 
-  # TODO: do something way better with this
+  # TODO: do something way better with this, like probably put it in an Application model which has_many environments
   def cookbook_repository
     @cookbook_repository ||= CookbookRepository.new("git@github.com:giraffesoft/conductor-cookbooks.git")
   end
