@@ -18,7 +18,7 @@ class Dna < HashWithIndifferentAccess
 
   protected
     def set_initial_run_list
-      self[:run_list] = ["roles[#{role}]"]
+      self[:run_list] = ["role[#{role}]"]
     end
 
     def eval_attributes_file

@@ -10,7 +10,7 @@ class DnaTest < ActiveSupport::TestCase
     end
 
     should "automatically add that to the runlist" do
-      assert_equal ["roles[app]"], @dna[:run_list]
+      assert_equal ["role[app]"], @dna[:run_list]
     end
 
     should "instance eval the attributes file" do
