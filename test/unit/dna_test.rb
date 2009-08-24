@@ -10,4 +10,15 @@ class DnaTest < ActiveSupport::TestCase
       assert_equal ["roles[app]"], @dna[:run_list]
     end
   end
+
+  context "Accessing hash keys via method syntax" do
+    setup do
+      @dna = Dna.new("app")
+      @dna.some_attribute "some value"
+    end
+
+    should "set that attribute" do
+      assert_equal "some value", @dna.some_attribute
+    end
+  end
 end
