@@ -20,9 +20,10 @@ class Environment < ActiveRecord::Base
 
   def to_dna
     {
-      :apps      => [application.name],
-      :rails_env => name,
-      :servers   => instances.to_dna
+      :apps       => [application.name],
+      :rails_env  => name,
+      :servers    => instances.to_dna,
+      :app_domain => domain
     }
   end
 end

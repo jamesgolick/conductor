@@ -73,5 +73,9 @@ class EnvironmentTest < Test::Unit::TestCase
     should "include the rails_env" do
       assert_equal @environment.name, @environment.to_dna[:rails_env]
     end
+
+    should "include the domain" do
+      assert_equal @environment.domain, @environment.to_dna[:app_domain]
+    end
   end
 end
