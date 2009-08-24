@@ -19,30 +19,33 @@ class DeploymentTest < ActiveSupport::TestCase
           returns(stub_everything)
       SshSession.expects(:new).with("james@myserver.com").returns(session_mock)
 
-      @deployment = Deployment.create :instance => @instance
+      @deployment = Deployment.new :instance => @instance
+      @deployment.perform_deployment
     end
 
     should "store the log of the session" do
       SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 0))
       Deployment.any_instance.stubs(:notify_instance)
-      @deployment = Deployment.create :instance => @instance
+      @deployment = Deployment.new :instance => @instance
+      @deployment.perform_deployment
 
       assert_equal "the log", @deployment.log
     end
 
     should "store the exit code of the session" do
       SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
-      @deployment = Deployment.create :instance => @instance
+      @deployment = Deployment.new :instance => @instance
+      @deployment.perform_deployment
 
       assert_equal 127, @deployment.exit_code
     end
 
-    should "call #notify_instance_of_start before create" do
+    should "call #notify_instance_of_start during the deployment" do
       SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
       @deployment = Deployment.create :instance => @instance
       @deployment = Deployment.new :instance => @instance
       @deployment.expects(:notify_instance_of_start)
-      @deployment.send(:callback, :before_create)
+      @deployment.perform_deployment
     end
   end
 
