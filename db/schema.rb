@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090824142554) do
+ActiveRecord::Schema.define(:version => 20090824144624) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(:version => 20090824142554) do
     t.string   "state"
     t.string   "dns_name"
     t.string   "private_dns_name"
+    t.string   "aws_state"
   end
 
   create_table "volumes", :force => true do |t|
