@@ -119,6 +119,10 @@ class InstanceTest < Test::Unit::TestCase
       before_should "start the bootstrapping job" do
         @instance.expects(:send_later).with(:bootstrap)
       end
+
+      should "change the config state to bootstrapping" do
+        assert @instance.bootstrapping?
+      end
     end
   end
 
