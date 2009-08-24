@@ -77,14 +77,14 @@ class InstanceTest < Test::Unit::TestCase
     should "create a chef deployment" do
       @instance = Factory(:running_instance)
       @instance.stubs(:chef_deployments).returns(mock(:create => nil))
-      @instance.start_deployment
+      @instance.deploy
     end
   end
 
   context "Setting an instance as bootstrapped" do
     should "set the config_state to bootstrapped and start deploying" do
       @instance = Factory(:running_instance)
-      @instance.expects(:send_later).with(:start_deployment)
+      @instance.expects(:deploy)
       @instance.bootstrapped!
       assert @instance.bootstrapped?
     end
@@ -150,7 +150,7 @@ class InstanceTest < Test::Unit::TestCase
       end
 
       before_should "start the bootstrapping job" do
-        @instance.expects(:send_later).with(:bootstrap)
+        @instance.expects(:bootstrap)
       end
     end
   end

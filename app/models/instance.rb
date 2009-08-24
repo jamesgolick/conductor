@@ -24,7 +24,7 @@ class Instance < ActiveRecord::Base
 
   def bootstrapped!
     update_attribute :config_state, 'bootstrapped'
-    send_later :start_deployment
+    deploy
   end
 
   def bootstrapping!
@@ -45,7 +45,7 @@ class Instance < ActiveRecord::Base
                       :private_dns_name => details[:private_dns_name],
                       :zone             => details[:aws_availability_zone],
                       :aws_state        => details[:aws_state]
-    launch_bootstrap_job if running?
+    bootstrap if running?
   end
 
   def aws_state_changed?
@@ -78,7 +78,7 @@ class Instance < ActiveRecord::Base
     @dna ||= Dna.new(role, cookbook_repository)
   end
 
-  def start_deployment
+  def deploy
     chef_deployments.create
   end
 
@@ -114,9 +114,5 @@ class Instance < ActiveRecord::Base
 
     def launch_wait_for_state_change_job
       send_later(:wait_for_state_change)
-    end
-
-    def launch_bootstrap_job
-      send_later(:bootstrap)
     end
 end
