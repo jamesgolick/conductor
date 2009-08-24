@@ -9,6 +9,7 @@ class Instance < ActiveRecord::Base
   has_many   :chef_logs
   has_many   :bootstrap_deployments
   has_many   :chef_deployments
+
   delegate   :application, :to => :environment
 
   enum_field :size,         %w( m1.small m1.large m1.xlarge c1.medium c1.xlarge )
