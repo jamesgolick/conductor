@@ -12,6 +12,7 @@ class Deployment < ActiveRecord::Base
     notify_instance_of_start
     run_commands
     successful? ? notify_instance_of_success : notify_instance_of_failure
+    save
   end
 
   protected
