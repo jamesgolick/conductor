@@ -84,7 +84,7 @@ class Instance < ActiveRecord::Base
   end
 
   def dna
-    @dna ||= Dna.new(role, cookbook_repository)
+    @dna ||= Dna.new(environment, role, cookbook_repository)
   end
 
   def deploy

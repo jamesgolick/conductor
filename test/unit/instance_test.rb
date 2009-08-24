@@ -192,7 +192,7 @@ class InstanceTest < Test::Unit::TestCase
     should "delegate to dna with its role and cookbook repository" do
       CookbookRepository.any_instance.stubs(:clone).stubs(:pull)
       @instance = Factory(:instance, :role => "mysql_master")
-      Dna.expects(:new).with(@instance.role, @instance.cookbook_repository)
+      Dna.expects(:new).with(@instance.environment, @instance.role, @instance.cookbook_repository)
       @instance.dna
     end
   end
