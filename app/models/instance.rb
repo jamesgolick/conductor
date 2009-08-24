@@ -15,7 +15,8 @@ class Instance < ActiveRecord::Base
   enum_field :role,         %w( mysql_master app_server )
   enum_field :zone,         %w( us-east-1a us-east-1b us-east-1c us-east-1d )
   enum_field :aws_state,    %w( pending running ),              :allow_nil => true
-  enum_field :config_state, %w( unconfigured bootstrapping bootstrapped deploying deployed ), :allow_nil => true
+  enum_field :config_state, %w( unconfigured bootstrapping bootstrapped 
+                                deploying deployment_failed deployed ), :allow_nil => true
 
   validate :database_server_is_running
 
@@ -37,6 +38,10 @@ class Instance < ActiveRecord::Base
 
   def deployed!
     update_attribute :config_state, "deployed"
+  end
+
+  def deployment_failed!
+    update_attribute :config_state, "deployment_failed"
   end
 
   def update_instance_state

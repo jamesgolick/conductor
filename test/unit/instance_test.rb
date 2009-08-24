@@ -114,6 +114,14 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  context "Setting an instance as deployment_failed" do
+    should "set the config_state to deployment_failed" do
+      @instance = Factory(:running_instance)
+      @instance.deployment_failed!
+      assert @instance.deployment_failed?
+    end
+  end
+
   context "After destroying an instances" do
     should "ask ec2 to destroy it" do
       Ec2.any_instance.expects(:terminate_instances).with(@instance.instance_id)
