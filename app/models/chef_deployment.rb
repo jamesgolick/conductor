@@ -12,6 +12,11 @@ class ChefDeployment < Deployment
 
   protected
     def notify_instance
+      instance.deployed!
+    end
+
+    def notify_instance_of_start
+      instance.deploying!
     end
 
     def put_dna

@@ -16,4 +16,14 @@ class ChefDeploymentTest < ActiveSupport::TestCase
       @deployment.save
     end
   end
+
+  should "notify the instance appropriately" do
+    @instance   = Factory(:instance, :role => "mysql_master")
+    @instance.expects(:deploying!)
+    @instance.expects(:deployed!)
+    @deployment = ChefDeployment.new :instance => @instance
+    @deployment.stubs(:run_commands)
+    @deployment.stubs(:successful?).returns(true)
+    @deployment.save!
+  end
 end
