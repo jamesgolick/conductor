@@ -26,7 +26,7 @@ class Deployment < ActiveRecord::Base
     end
 
     def notify_instance_of_success
-      raise NotImplementedError, "#notify_instnace needs to be implemented per subclass of Deployment"
+      raise NotImplementedError, "#notify_instance_of_success needs to be implemented per subclass of Deployment"
     end
 
     def notify_instance_of_start
