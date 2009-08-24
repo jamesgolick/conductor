@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :applications, :has_many => :environments
-  map.resources :environments, :has_many => :instances
+  map.resources :environments do |e|
+    e.resources :instances, :member => {:deployments => :post}
+  end
 end

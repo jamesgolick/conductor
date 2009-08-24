@@ -5,4 +5,12 @@ class InstancesController < ResourceController::Base
   create.wants.html { redirect_to [@environment.application, @environment] }
 
   destroy.wants.html { redirect_to [@environment.application, @environment] }
+
+  def deployments
+    load_object
+    @instance.send_later :start_deployment
+    flash[:notice] = "Deploying"
+
+    redirect_to @instance.environment
+  end
 end
