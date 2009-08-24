@@ -77,5 +77,9 @@ class EnvironmentTest < Test::Unit::TestCase
     should "include the domain" do
       assert_equal @environment.domain, @environment.to_dna[:app_domain]
     end
+
+    should "set the user to the name of the app" do
+      assert_equal @environment.application.name, @environment.to_dna[:user]
+    end
   end
 end

@@ -23,7 +23,8 @@ class Environment < ActiveRecord::Base
       :apps       => [application.name],
       :rails_env  => name,
       :servers    => instances.to_dna,
-      :app_domain => domain
+      :app_domain => domain,
+      :user       => application.name
     }
   end
 end
