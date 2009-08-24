@@ -61,6 +61,10 @@ class InstanceTest < Test::Unit::TestCase
       should "have an aws_state of pending" do
         assert_equal 'pending', @instance.aws_state
       end
+
+      should "have a config state of unconfigured" do
+        assert @instance.unconfigured?
+      end
     end
 
     should "fire off a job to wait for state change" do
@@ -70,7 +74,7 @@ class InstanceTest < Test::Unit::TestCase
   end
 
   context "Setting an instance as bootstrapped" do
-    should "set the state to bootstrapped" do
+    should "set the config_state to bootstrapped" do
       @instance = Factory(:running_instance)
       @instance.bootstrapped!
       assert @instance.bootstrapped?
