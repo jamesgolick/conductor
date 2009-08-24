@@ -6,7 +6,8 @@ class DnaTest < ActiveSupport::TestCase
       CookbookRepository.any_instance.stubs(:clone).stubs(:pull)
       @repo = CookbookRepository.new("doesn't matter")
       @repo.stubs(:read).returns("some_attr 'a value'")
-      @dna  = Dna.new("app", @repo)
+      @environment = Factory(:environment)
+      @dna  = Dna.new(@environment, "app", @repo)
     end
 
     should "automatically add that to the runlist" do
@@ -16,11 +17,15 @@ class DnaTest < ActiveSupport::TestCase
     should "instance eval the attributes file" do
       assert_equal "a value", @dna.some_attr
     end
+
+    should "merge that environment's dna" do
+      assert_equal @environment.name, @dna.rails_env
+    end
   end
 
   context "Accessing hash keys via method syntax" do
     setup do
-      @dna = Dna.new("app", stub_everything(:read => ''))
+      @dna = Dna.new(stub(:to_dna => {}), "app", stub_everything(:read => ''))
       @dna.some_attribute "some value"
     end
 
