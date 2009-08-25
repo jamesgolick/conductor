@@ -262,6 +262,23 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  context "The public address" do
+    setup do
+      @instance = Factory(:mysql_master)
+    end
+
+    should "be thte address, when one is attached" do
+      @address  = Address.create
+      @instance.assign_address!(@address)
+      assert_equal @address.address, @instance.public_address
+    end
+
+    should "be the public dns anme otherwise" do
+      @instance.update_attributes :dns_name => "dns.name"
+      assert_equal "dns.name", @instance.public_address
+    end
+  end
+
   protected
     def describe_instances_result
       {

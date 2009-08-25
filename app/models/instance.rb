@@ -107,6 +107,10 @@ class Instance < ActiveRecord::Base
     ec2.associate_address(instance_id, address.address)
   end
 
+  def public_address
+    address.nil? ? dns_name : address.address
+  end
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?
