@@ -21,7 +21,8 @@ class Ec2
        :aws_kernel_id      => "aki-9905e0f0",
        :ami_launch_index   => "0",
        :aws_availability_zone => "us-east-1b"
-    }
+    },
+    :allocate_address => "127.0.0.1"
   }
 
   class << self
@@ -48,6 +49,10 @@ class Ec2
     connection.describe_instances(instance_id)
   end
 
+  def allocate_address
+    send("allocate_address_#{mode}")
+  end
+
   protected
     def run_instances_production(opts)
       connection.run_instances(opts[:ami], 1, 1, opts[:groups], opts[:keypair], '',
@@ -68,6 +73,14 @@ class Ec2
     def terminate_instances_test(*instances)
       test_mode_calls[:terminate_instances] ||= []
       test_mode_calls[:terminate_instances] << instances
+    end
+
+    def allocate_address_production
+      connection.allocate_address
+    end
+
+    def allocate_address_test
+      test_responses[:allocate_address]
     end
 
     def connection

@@ -34,6 +34,13 @@ test:
       @ec2.stubs(:connection).returns(mock_connection)
       @ec2.terminate_instances('i-12345')
     end
+
+    should "allocate an address" do
+      mock_connection = mock
+      mock_connection.expects(:allocate_address).returns("127.0.0.1")
+      @ec2.stubs(:connection).returns(mock_connection)
+      @ec2.allocate_address
+    end
   end
 
   context "In test mode" do
@@ -56,6 +63,10 @@ test:
     should "store the calls to terminate_instances in an array" do
       @ec2.terminate_instances "i-42i1"
       assert_equal ["i-42i1"], @ec2.test_mode_calls[:terminate_instances].first
+    end
+
+    should "return the test response for allocate address" do
+      assert_equal "127.0.0.1", @ec2.allocate_address
     end
   end
 
