@@ -144,4 +144,21 @@ class EnvironmentTest < Test::Unit::TestCase
       @env.notify_of(:launch, @app)
     end
   end
+
+  context "When an instance is terminated" do
+    setup do
+      Instance.any_instance.stubs(:assign_address!)
+      @env = Factory(:environment)
+      @db  = Factory(:mysql_master, :environment => @env)
+      @app = Factory(:app_server,   :environment => @env)
+      @env.acquire_new_master
+    end
+
+    should "remove it as master, and attempt to acquire another" do
+      @env.expects(:acquire_new_master)
+      @env.notify_of(:termination, @app)
+
+      assert_nil @env.reload.master
+    end
+  end
 end

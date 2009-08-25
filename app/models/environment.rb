@@ -52,6 +52,9 @@ class Environment < ActiveRecord::Base
   def notify_of(event, instance)
     if event == :launch && instance.app? && need_master?
       acquire_new_master
+    elsif event == :termination && instance.app? && instance == master
+      update_attribute :master_id, nil
+      acquire_new_master
     end
   end
 
