@@ -8,9 +8,12 @@ class Instance < ActiveRecord::Base
   end
 
   belongs_to :environment
+
   has_many   :chef_logs
   has_many   :bootstrap_deployments
   has_many   :chef_deployments
+
+  has_one    :address
 
   delegate   :application, :to => :environment
 

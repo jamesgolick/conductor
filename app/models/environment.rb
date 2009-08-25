@@ -11,6 +11,8 @@ class Environment < ActiveRecord::Base
     end
   end
 
+  has_one :address
+
   validates_presence_of :name
   validates_presence_of :domain
 
