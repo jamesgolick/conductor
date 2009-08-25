@@ -12,6 +12,7 @@ class Environment < ActiveRecord::Base
   end
 
   has_one :address
+  belongs_to :master, :class_name => "Instance"
 
   validates_presence_of :name
   validates_presence_of :domain
@@ -33,4 +34,27 @@ class Environment < ActiveRecord::Base
       :user       => application.name
     }
   end
+
+  def instance_event(event, instance)
+    if event == :launch && assign_address_to?(instance)
+      instance.attach_address!(address)
+    end
+  end
+
+  def assign_address_to?(instance)
+    instance.app? && instances.count == 1
+  end
+
+  def acquire_new_master
+    unless next_potential_master.nil?
+      self.class.update_all "master_id = #{next_potential_master.id}", 
+                            "master_id IS NULL AND id = #{id}"
+      reload
+    end
+  end
+
+  protected
+    def next_potential_master
+      instances.app.first
+    end
 end

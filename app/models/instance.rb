@@ -31,6 +31,7 @@ class Instance < ActiveRecord::Base
 
   named_scope    :running,    :conditions => {:aws_state    => "running"}
   named_scope    :configured, :conditions => {:config_state => "deployed"}
+  named_scope    :app,        :conditions => {:role         => "app"}
 
   def bootstrapped!
     update_attribute :config_state, 'bootstrapped'

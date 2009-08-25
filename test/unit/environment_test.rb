@@ -98,4 +98,23 @@ class EnvironmentTest < Test::Unit::TestCase
       assert !@environment.has_configured_db_server?
     end
   end
+
+  context "Acquiring a new master" do
+    setup do
+      @env = Factory(:environment)
+      @db  = Factory(:mysql_master, :environment => @env)
+      @app = Factory(:app_server,   :environment => @env)
+    end
+
+    should "set @env.master_id to the first available app server's id" do
+      @env.acquire_new_master
+      assert_equal @app, @env.master
+    end
+
+    should "do nothing if there's no app server available" do
+      @app.destroy
+      @env.acquire_new_master
+      assert_nil @env.master
+    end
+  end
 end
