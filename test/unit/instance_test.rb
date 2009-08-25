@@ -165,6 +165,10 @@ class InstanceTest < Test::Unit::TestCase
       before_should "start the bootstrapping job" do
         @instance.expects(:bootstrap)
       end
+
+      before_should "notify the environment" do
+        @instance.environment.expects(:notify_of).with(:running, @instance)
+      end
     end
   end
 

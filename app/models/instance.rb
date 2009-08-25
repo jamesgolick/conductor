@@ -61,7 +61,10 @@ class Instance < ActiveRecord::Base
                       :private_dns_name => details[:private_dns_name],
                       :zone             => details[:aws_availability_zone],
                       :aws_state        => details[:aws_state]
-    bootstrap if running?
+    if running?
+      bootstrap
+      environment.notify_of(:running, self)
+    end
   end
 
   def aws_state_changed?
