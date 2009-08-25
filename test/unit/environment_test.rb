@@ -104,6 +104,7 @@ class EnvironmentTest < Test::Unit::TestCase
       @env = Factory(:environment)
       @db  = Factory(:mysql_master, :environment => @env)
       @app = Factory(:app_server,   :environment => @env)
+      @app.update_attributes :aws_state => "running"
       Instance.any_instance.stubs(:assign_address!)
     end
 
@@ -122,6 +123,12 @@ class EnvironmentTest < Test::Unit::TestCase
       @app.expects(:assign_address!).with(@env.create_address)
       @env.stubs(:master).returns(@app)
       @env.acquire_new_master
+    end
+
+    should "not assign an instance that isn't running as master" do
+      @app.update_attributes :aws_state => "pending"
+      @env.acquire_new_master
+      assert_nil @env.master
     end
   end
 
@@ -151,6 +158,7 @@ class EnvironmentTest < Test::Unit::TestCase
       @env = Factory(:environment)
       @db  = Factory(:mysql_master, :environment => @env)
       @app = Factory(:app_server,   :environment => @env)
+      @app.update_attributes :aws_state => "running"
       @env.acquire_new_master
     end
 

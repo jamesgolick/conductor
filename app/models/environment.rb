@@ -64,6 +64,6 @@ class Environment < ActiveRecord::Base
 
   protected
     def next_potential_master
-      instances.app.first
+      instances.app.running.first
     end
 end
