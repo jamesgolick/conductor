@@ -82,4 +82,20 @@ class EnvironmentTest < Test::Unit::TestCase
       assert_equal @environment.application.name, @environment.to_dna[:user]
     end
   end
+
+  context "Checking whether there's a configured db server" do
+    setup do
+      @environment = Factory(:environment)
+      @db          = Factory(:mysql_master, :environment => @environment)
+    end
+
+    should "be true if there is one that's configured" do
+      @db.update_attribute :config_state, "deployed"
+      assert @environment.has_configured_db_server?
+    end
+
+    should "be false if there isn't one that's configured" do
+      assert !@environment.has_configured_db_server?
+    end
+  end
 end

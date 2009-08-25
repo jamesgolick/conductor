@@ -18,6 +18,10 @@ class Environment < ActiveRecord::Base
     instances.any?(&:mysql_master?)
   end
 
+  def has_configured_db_server?
+    instances.any? { |i| i.mysql_master? && i.deployed? }
+  end
+
   def to_dna
     {
       :apps       => [application.name],
