@@ -102,6 +102,11 @@ class Instance < ActiveRecord::Base
     !app? || environment.has_configured_db_server?
   end
 
+  def assign_address!(address)
+    address.update_attributes :instance => self
+    ec2.associate_address(instance_id, address.address)
+  end
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?

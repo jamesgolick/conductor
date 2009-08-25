@@ -226,6 +226,26 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  context "Assiging an address" do
+    setup do
+      @instance = Factory.build(:instance, :role => "app")
+      @instance.save(false)
+      @instance.reload
+    end
+
+    should "assign it via ec2" do
+      address = Address.create :address => "127.0.0.1"
+      Ec2.any_instance.expects(:associate_address).with(@instance.instance_id, address.address)
+      @instance.assign_address!(address)
+    end
+
+    should "associate it with itself" do
+      address = Address.create
+      @instance.assign_address!(address)
+      assert_equal address, @instance.address
+    end
+  end
+
   protected
     def describe_instances_result
       {
