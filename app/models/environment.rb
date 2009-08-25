@@ -49,6 +49,16 @@ class Environment < ActiveRecord::Base
     master_id == next_master_id
   end
 
+  def notify_of(event, instance)
+    if event == :launch && instance.app? && need_master?
+      acquire_new_master
+    end
+  end
+
+  def need_master?
+    master.nil?
+  end
+
   protected
     def next_potential_master
       instances.app.first

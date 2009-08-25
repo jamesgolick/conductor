@@ -124,4 +124,24 @@ class EnvironmentTest < Test::Unit::TestCase
       @env.acquire_new_master
     end
   end
+
+  context "When an instance launches" do
+    setup do
+      @env = Factory(:environment)
+      @db  = Factory(:mysql_master, :environment => @env)
+    end
+
+    should "attempt to acquire a new master if there's no master" do
+      @env.expects(:acquire_new_master)
+      @app = Factory.build(:app_server,   :environment => @env)
+      @env.notify_of(:launch, @app)
+    end
+
+    should "not attempt to acquire a master if there is one already" do
+      @env.expects(:acquire_new_master).never
+      @app = Factory.build(:app_server,   :environment => @env)
+      @env.stubs(:master).returns(@app)
+      @env.notify_of(:launch, @app)
+    end
+  end
 end
