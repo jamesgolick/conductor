@@ -20,14 +20,14 @@ class Instance < ActiveRecord::Base
   enum_field :size,         %w( m1.small m1.large m1.xlarge c1.medium c1.xlarge )
   enum_field :role,         %w( mysql_master app )
   enum_field :zone,         %w( us-east-1a us-east-1b us-east-1c us-east-1d )
-  enum_field :aws_state,    %w( pending running ),              :allow_nil => true
+  enum_field :aws_state,    %w( pending running terminating ),          :allow_nil => true
   enum_field :config_state, %w( unconfigured bootstrapping bootstrapped 
                                 deploying deployment_failed deployed ), :allow_nil => true
 
   validate :database_server_is_running
 
   after_create   :launch_ec2_instance, :launch_wait_for_state_change_job, :notify_environment_of_launch
-  before_destroy :terminate_ec2_instance, :notify_environment_of_termination
+  before_destroy :set_state_to_terminating, :terminate_ec2_instance, :notify_environment_of_termination
 
   named_scope    :running,    :conditions => {:aws_state    => "running"}
   named_scope    :configured, :conditions => {:config_state => "deployed"}
@@ -157,5 +157,9 @@ class Instance < ActiveRecord::Base
 
     def notify_environment_of_termination
       environment.notify_of(:termination, self)
+    end
+
+    def set_state_to_terminating
+      update_attribute :aws_state, "terminating"
     end
 end

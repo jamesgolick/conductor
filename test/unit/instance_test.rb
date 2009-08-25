@@ -127,6 +127,11 @@ class InstanceTest < Test::Unit::TestCase
       Ec2.any_instance.expects(:terminate_instances).with(@instance.instance_id)
       @instance.destroy
     end
+
+    should "set state to terminating" do
+      @instance.destroy
+      assert_equal "terminating", @instance.aws_state
+    end
   end
 
   context "Updating the instance state" do
