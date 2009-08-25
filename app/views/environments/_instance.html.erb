@@ -1,5 +1,9 @@
 <li>
-  <%= instance.role %> (<%= instance.aws_state %>, <%= instance.config_state %>, <%= instance.size %>, <%= instance.instance_id %>)
+  <%= instance.role %> (<%= instance.aws_state %>, <%= instance.config_state %>,
+  <% if instance == @environment.master -%>
+    master, 
+  <% end -%>
+  <%= instance.size %>, <%= instance.instance_id %>)
   <% if instance.running? || instance.bootstrapped? -%>
     <%= link_to instance.dns_name, "http://#{instance.dns_name}" %>
   <% end -%>
