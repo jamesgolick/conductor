@@ -78,7 +78,7 @@ class Instance < ActiveRecord::Base
   end
 
   def connection_string
-    "root@#{dns_name}"
+    "root@#{public_address}"
   end
 
   def bootstrap
