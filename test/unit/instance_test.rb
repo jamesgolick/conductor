@@ -203,12 +203,12 @@ class InstanceTest < Test::Unit::TestCase
     end
     
     should "be ready_for_deployment? if there is a configured db server" do
-      @instance.environment.stubs(:has_configured_database_server?).returns(true)
+      @instance.environment.stubs(:has_configured_db_server?).returns(true)
       assert @instance.ready_for_deployment?
     end
 
     should "not be ready_for_deployment? if there is not a configured db server" do
-      @instance.environment.stubs(:has_configured_database_server?).returns(false)
+      @instance.environment.stubs(:has_configured_db_server?).returns(false)
       assert !@instance.ready_for_deployment?
     end
   end

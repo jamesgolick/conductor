@@ -95,7 +95,7 @@ class Instance < ActiveRecord::Base
   end
 
   def ready_for_deployment?
-    !app? || environment.has_configured_database_server?
+    !app? || environment.has_configured_db_server?
   end
 
   protected
