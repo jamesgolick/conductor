@@ -55,6 +55,8 @@ class Environment < ActiveRecord::Base
     elsif event == :termination && instance.app? && instance == master
       update_attribute :master_id, nil
       acquire_new_master
+    elsif event == :running && need_master?
+      acquire_new_master
     end
   end
 

@@ -169,4 +169,25 @@ class EnvironmentTest < Test::Unit::TestCase
       assert_nil @env.reload.master
     end
   end
+
+  context "When an instance becomes running" do
+    setup do
+      Instance.any_instance.stubs(:assign_address!)
+      @env = Factory(:environment)
+      @db  = Factory(:mysql_master, :environment => @env)
+      @app = Factory(:app_server,   :environment => @env)
+    end
+
+    should "attempt to acquire a new master if there isn't one" do
+      @env.expects(:acquire_new_master)
+      @env.notify_of(:running, @app)
+    end
+
+    should "do nothing if there's already a master" do
+      @app.update_attribute :aws_state, "running"
+      @env.acquire_new_master
+      @env.expects(:acquire_new_master).never
+      @env.notify_of(:running, @app)
+    end
+  end
 end
