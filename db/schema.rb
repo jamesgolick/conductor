@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090825135733) do
+ActiveRecord::Schema.define(:version => 20090825144710) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "environment_id"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20090825135733) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "domain"
+    t.integer  "master_id"
   end
 
   create_table "instances", :force => true do |t|
