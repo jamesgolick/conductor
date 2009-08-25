@@ -35,22 +35,18 @@ class Environment < ActiveRecord::Base
     }
   end
 
-  def instance_event(event, instance)
-    if event == :launch && assign_address_to?(instance)
-      instance.attach_address!(address)
-    end
-  end
-
-  def assign_address_to?(instance)
-    instance.app? && instances.count == 1
-  end
-
   def acquire_new_master
-    unless next_potential_master.nil?
-      self.class.update_all "master_id = #{next_potential_master.id}", 
-                            "master_id IS NULL AND id = #{id}"
-      reload
+    next_master_id = next_potential_master.andand.id
+    if next_master_id.present? && attempt_to_set_as_master(next_master_id)
+      master.assign_address!(address || create_address)
     end
+  end
+
+  def attempt_to_set_as_master(next_master_id)
+    self.class.update_all "master_id = #{next_master_id}", 
+                          "master_id IS NULL AND id = #{id}"
+    reload
+    master_id == next_master_id
   end
 
   protected

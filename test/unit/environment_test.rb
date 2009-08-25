@@ -104,6 +104,7 @@ class EnvironmentTest < Test::Unit::TestCase
       @env = Factory(:environment)
       @db  = Factory(:mysql_master, :environment => @env)
       @app = Factory(:app_server,   :environment => @env)
+      Instance.any_instance.stubs(:assign_address!)
     end
 
     should "set @env.master_id to the first available app server's id" do
@@ -115,6 +116,12 @@ class EnvironmentTest < Test::Unit::TestCase
       @app.destroy
       @env.acquire_new_master
       assert_nil @env.master
+    end
+
+    should "assign the address to him" do
+      @app.expects(:assign_address!).with(@env.create_address)
+      @env.stubs(:master).returns(@app)
+      @env.acquire_new_master
     end
   end
 end
