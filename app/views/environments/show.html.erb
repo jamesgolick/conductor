@@ -2,7 +2,7 @@
 
 <h3><%= pluralize(@environment.instances.count, "instance") %> running</h3>
 
-<ul>
+<ul id="instances">
   <%= render :partial => 'instance', :collection => @environment.instances %>
 </ul>
 
