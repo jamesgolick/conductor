@@ -6,6 +6,8 @@ class InstancesController < ResourceController::Base
 
   destroy.wants.html { redirect_to [@environment.application, @environment] }
 
+  index.wants.js { render :partial => "environments/instance", :collection => @environment.instances }
+
   def deployments
     load_object
     @instance.deploy

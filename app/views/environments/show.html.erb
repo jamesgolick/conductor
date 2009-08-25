@@ -1,3 +1,15 @@
+<% content_for(:script) do -%>
+  <script type="text/javascript">
+    $(function() {
+      $.PeriodicalUpdater({
+        url: '<%= environment_instances_url(@environment) %>.js'
+        }, function(data) {
+          $('#instances').html(data);
+        });
+    });
+  </script>
+<% end -%>
+
 <h2><%= h @environment.application.name %>: <%= h @environment.name %></h2>
 
 <h3><%= pluralize(@environment.instances.count, "instance") %> running</h3>
