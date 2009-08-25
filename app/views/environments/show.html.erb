@@ -3,17 +3,7 @@
 <h3><%= pluralize(@environment.instances.count, "instance") %> running</h3>
 
 <ul>
-  <% @environment.instances.each do |i| -%>
-    <li>
-      <%= i.role %> (<%= i.aws_state %>, <%= i.config_state %>, <%= i.size %>, <%= i.instance_id %>)
-      <% if i.running? || i.bootstrapped? -%>
-        <%= link_to i.dns_name, "http://#{i.dns_name}" %>
-      <% end -%>
-      <%= link_to "deploy", deployments_environment_instance_url(@environment, i), :method => :post %>
-      <%= link_to "delete", environment_instance_url(@environment, i), :method => :delete, :confirm => "Are you sure?!" %>
-    </li>
-
-  <% end -%>
+  <%= render :partial => 'instance', :collection => @environment.instances %>
 </ul>
 
 
