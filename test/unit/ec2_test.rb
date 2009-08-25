@@ -41,6 +41,13 @@ test:
       @ec2.stubs(:connection).returns(mock_connection)
       @ec2.allocate_address
     end
+
+    should "associate an address" do
+      mock_connection = mock
+      mock_connection.expects(:associate_address).with("i-12345", "127.0.0.1")
+      @ec2.stubs(:connection).returns(mock_connection)
+      @ec2.associate_address("i-12345", "127.0.0.1")
+    end
   end
 
   context "In test mode" do
@@ -67,6 +74,11 @@ test:
 
     should "return the test response for allocate address" do
       assert_equal "127.0.0.1", @ec2.allocate_address
+    end
+
+    should "store the associated addresses" do
+      @ec2.associate_address("i-12345", "127.0.0.1")
+      assert_equal ["i-12345", "127.0.0.1"], Ec2.test_mode_calls[:associate_address].first
     end
   end
 

@@ -53,6 +53,10 @@ class Ec2
     send("allocate_address_#{mode}")
   end
 
+  def associate_address(instance_id, address)
+    send("associate_address_#{mode}", instance_id, address)
+  end
+
   protected
     def run_instances_production(opts)
       connection.run_instances(opts[:ami], 1, 1, opts[:groups], opts[:keypair], '',
@@ -81,6 +85,15 @@ class Ec2
 
     def allocate_address_test
       test_responses[:allocate_address]
+    end
+
+    def associate_address_production(instance_id, address)
+      connection.associate_address(instance_id, address)
+    end
+
+    def associate_address_test(instance_id, address)
+      self.class.test_mode_calls[:associate_address] ||= []
+      self.class.test_mode_calls[:associate_address] << [instance_id, address]
     end
 
     def connection
