@@ -1,4 +1,6 @@
 class Instance < ActiveRecord::Base
+  class WaitForConfiguredDbServer < RuntimeError; end
+
   class << self
     def ami_for(instance_size)
       %w(m1.small c1.medium).include?(instance_size) ? "ami-ef48af86" : "ami-e257b08b"
@@ -37,6 +39,7 @@ class Instance < ActiveRecord::Base
   end
 
   def deploying!
+    assert_ready_for_deployment
     update_attribute :config_state, "deploying"
   end
 
@@ -91,6 +94,10 @@ class Instance < ActiveRecord::Base
     chef_deployments.create
   end
 
+  def ready_for_deployment?
+    !app? || environment.has_configured_database_server?
+  end
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?
@@ -123,5 +130,11 @@ class Instance < ActiveRecord::Base
 
     def launch_wait_for_state_change_job
       send_later(:wait_for_state_change)
+    end
+
+    def assert_ready_for_deployment
+      unless ready_for_deployment?
+        raise WaitForConfiguredDbServer, "Waiting for a configured db server."
+      end
     end
 end

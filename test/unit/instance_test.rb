@@ -197,6 +197,35 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  context "An app server" do
+    setup do
+      @instance = Factory.build(:instance, :role => "app")
+    end
+    
+    should "be ready_for_deployment? if there is a configured db server" do
+      @instance.environment.stubs(:has_configured_database_server?).returns(true)
+      assert @instance.ready_for_deployment?
+    end
+
+    should "not be ready_for_deployment? if there is not a configured db server" do
+      @instance.environment.stubs(:has_configured_database_server?).returns(false)
+      assert !@instance.ready_for_deployment?
+    end
+  end
+
+  context "Marking an instance that isn't ready for deployment as deploying" do
+    setup do
+      @instance = Factory.build(:instance, :role => "app")
+    end
+
+    should "raise Instance::WaitForConfiguredDbServerError" do
+      @instance.stubs(:ready_for_deployment?).returns(false)
+      assert_raise(Instance::WaitForConfiguredDbServer) {
+        @instance.deploying!
+      }
+    end
+  end
+
   protected
     def describe_instances_result
       {
