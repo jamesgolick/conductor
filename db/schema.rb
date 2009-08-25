@@ -9,7 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090824184649) do
+ActiveRecord::Schema.define(:version => 20090825135733) do
+
+  create_table "addresses", :force => true do |t|
+    t.integer  "environment_id"
+    t.integer  "instance_id"
+    t.string   "address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "applications", :force => true do |t|
     t.string   "name"
