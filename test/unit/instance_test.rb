@@ -246,6 +246,22 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  context "When an instance is created" do
+    should "notify the environment" do
+      @instance = Factory.build(:mysql_master)
+      @instance.environment.expects(:notify_of).with(:launch, @instance)
+      @instance.save
+    end
+  end
+
+  context "When an instance is terminated" do
+    should "notify the environment" do
+      @instance = Factory(:mysql_master)
+      @instance.environment.expects(:notify_of).with(:termination, @instance)
+      @instance.destroy
+    end
+  end
+
   protected
     def describe_instances_result
       {

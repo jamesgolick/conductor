@@ -26,8 +26,8 @@ class Instance < ActiveRecord::Base
 
   validate :database_server_is_running
 
-  after_create   :launch_ec2_instance, :launch_wait_for_state_change_job
-  before_destroy :terminate_ec2_instance
+  after_create   :launch_ec2_instance, :launch_wait_for_state_change_job, :notify_environment_of_launch
+  before_destroy :terminate_ec2_instance, :notify_environment_of_termination
 
   named_scope    :running,    :conditions => {:aws_state    => "running"}
   named_scope    :configured, :conditions => {:config_state => "deployed"}
@@ -145,5 +145,13 @@ class Instance < ActiveRecord::Base
       unless ready_for_deployment?
         raise WaitForConfiguredDbServer, "Waiting for a configured db server."
       end
+    end
+
+    def notify_environment_of_launch
+      environment.notify_of(:launch, self)
+    end
+
+    def notify_environment_of_termination
+      environment.notify_of(:termination, self)
     end
 end
