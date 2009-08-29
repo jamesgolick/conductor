@@ -14,8 +14,8 @@ class SshSessionTest < Test::Unit::TestCase
     setup do
       @session    = SshSession.new("james@myserver.com")
       @multi_mock = SSHMultiMock.new
-      @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, :stdout, "stdout output"
-      @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, :stderr, "stderr output"
+      @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, :stdout, "stdout output\n"
+      @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, :stderr, "stderr output\n"
       @multi_mock.set_exit_code "ls -la", 0
       @session.stubs(:ssh).returns(@multi_mock)
 

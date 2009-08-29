@@ -14,7 +14,7 @@ class SshSession
     log = ""
 
     channel = ssh.exec(command) do |channel, stream, data|
-      line = "[#{channel[:host]} #{stream.to_s.upcase}]: #{data}\n"
+      line = "[#{channel[:host]} #{stream.to_s.upcase}]: #{data}"
 
       yield(line) if block_given?
 
