@@ -23,6 +23,15 @@ class SshSessionTest < Test::Unit::TestCase
       @log_lines = @result.log.split("\n")
     end
 
+    should "yield the log lines to the supplied block" do
+      lines = []
+      block = lambda { |line| lines << line } 
+      @session.run("ls -la", &block)
+      
+      assert_equal "[james@myserver.com STDOUT]: stdout output\n", lines.first
+      assert_equal "[james@myserver.com STDERR]: stderr output\n", lines[1]
+    end
+
     should "return the log of the command" do
       assert_equal "[james@myserver.com STDOUT]: stdout output", @log_lines.first
       assert_equal "[james@myserver.com STDERR]: stderr output", @log_lines[1]
