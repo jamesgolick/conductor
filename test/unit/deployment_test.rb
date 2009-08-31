@@ -26,7 +26,7 @@ class DeploymentTest < ActiveSupport::TestCase
     end
 
     should "store the log of the session" do
-      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 0))
+      SshSession.any_instance.stubs(:run).yields("the log").returns(CommandResult.new("", "the log", 0))
       Deployment.any_instance.stubs(:notify_instance)
       @deployment = Deployment.new :instance => @instance
       @deployment.perform_deployment

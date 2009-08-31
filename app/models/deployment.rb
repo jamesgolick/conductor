@@ -17,8 +17,10 @@ class Deployment < ActiveRecord::Base
 
   protected
     def run_commands
-      result         = ssh.run(self.class.command)
-      self.log       = result.log
+      self.log       = ""
+      result         = ssh.run(self.class.command) do |line|
+        update_attribute :log, log + line
+      end
       self.exit_code = result.exit_code
     end
 
