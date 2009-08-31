@@ -19,5 +19,8 @@ class BootstrapDeployment < Deployment
     def notify_instance_of_start
       instance.bootstrapping!
     end
+
+    def notify_instance_of_failure
+    end
 end
 
