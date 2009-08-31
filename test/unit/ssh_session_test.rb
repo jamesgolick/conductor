@@ -14,7 +14,8 @@ class SshSessionTest < Test::Unit::TestCase
     setup do
       @session    = SshSession.new("james@myserver.com")
       @multi_mock = SSHMultiMock.new
-      @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, :stdout, "stdout output\n"
+      @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, :stdout, "stdout"
+      @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, :stdout, " output\n"
       @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, :stderr, "stderr output\n"
       @multi_mock.set_exit_code "ls -la", 0
       @session.stubs(:ssh).returns(@multi_mock)
@@ -24,17 +25,18 @@ class SshSessionTest < Test::Unit::TestCase
     end
 
     should "yield the log lines to the supplied block" do
-      lines = []
-      block = lambda { |line| lines << line } 
+      yields = []
+      block  = lambda { |line| yields << line } 
       @session.run("ls -la", &block)
       
-      assert_equal "[james@myserver.com STDOUT]: stdout output\n", lines.first
-      assert_equal "[james@myserver.com STDERR]: stderr output\n", lines[1]
+      assert_equal "[STDOUT]: stdout", yields.first
+      assert_equal " output\n", yields[1]
+      assert_equal "[STDERR]: stderr output\n", yields[2]
     end
 
     should "return the log of the command" do
-      assert_equal "[james@myserver.com STDOUT]: stdout output", @log_lines.first
-      assert_equal "[james@myserver.com STDERR]: stderr output", @log_lines[1]
+      assert_equal "[STDOUT]: stdout output", @log_lines.first
+      assert_equal "[STDERR]: stderr output", @log_lines[1]
     end
 
     should "return the exit code" do

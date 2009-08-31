@@ -14,7 +14,7 @@ class SshSession
     log = ""
 
     channel = ssh.exec(command) do |channel, stream, data|
-      line = "[#{channel[:host]} #{stream.to_s.upcase}]: #{data}"
+      line = build_line(stream, log, data)
 
       yield(line) if block_given?
 
@@ -46,6 +46,13 @@ class SshSession
 
     def username
       host.split("@").first
+    end
+
+    def build_line(stream, log, data)
+      returning("") do |line|
+        line << "[#{stream.to_s.upcase}]: " if log.ends_with?("\n") || log.blank?
+        line << data
+      end
     end
 end
 
