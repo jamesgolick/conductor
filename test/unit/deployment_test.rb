@@ -74,4 +74,14 @@ class DeploymentTest < ActiveSupport::TestCase
     @deployment = Deployment.new :exit_code => 127
     assert !@deployment.successful?
   end
+
+  should "return the last line of the log" do
+    @deployment = Deployment.new :log => "stuff\nand other stuff"
+    assert_equal "and other stuff", @deployment.last_line_of_log
+  end
+
+  should "not raise if the log is nil" do
+    @deployment = Deployment.new
+    assert_equal "", @deployment.last_line_of_log
+  end
 end

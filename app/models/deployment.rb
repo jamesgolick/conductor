@@ -15,6 +15,10 @@ class Deployment < ActiveRecord::Base
     save
   end
 
+  def last_line_of_log
+    log.nil? ? "" : log.split("\n").last
+  end
+
   protected
     def run_commands
       self.log       = ""
