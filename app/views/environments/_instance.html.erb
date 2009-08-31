@@ -1,12 +1,21 @@
-<li>
-  <%= instance.role %> (<%= instance.aws_state %>, <%= instance.config_state %>,
-  <% if instance == @environment.master -%>
-    master, 
-  <% end -%>
-  <%= instance.size %>, <%= instance.instance_id %>)
-  <% if instance.running? || instance.bootstrapped? -%>
-    <%= link_to instance.public_address, "http://#{instance.public_address}" %>
-  <% end -%>
-  <%= link_to "deploy", deployments_environment_instance_url(@environment, instance), :method => :post %>
-  <%= link_to "delete", environment_instance_url(@environment, instance), :method => :delete, :confirm => "Are you sure?!" %>
+<li class="instance">
+  <div class="info">
+    <%= instance.role %> (<%= instance.aws_state %>, <%= instance.config_state %>,
+    <% if instance == @environment.master -%>
+      master, 
+    <% end -%>
+    <%= instance.size %>, <%= instance.instance_id %>)
+    <% if instance.running? || instance.bootstrapped? -%>
+      <%= link_to instance.public_address, "http://#{instance.public_address}" %>
+    <% end -%>
+    <%= link_to "deploy", deployments_environment_instance_url(@environment, instance), :method => :post %>
+    <%= link_to "delete", environment_instance_url(@environment, instance), :method => :delete, :confirm => "Are you sure?!" %>
+  </div>
+  <div class="log_window">
+    <% if instance.bootstrapping? -%>
+      <%= instance.bootstrap_deployments.last.log.split("\n").last %>
+    <% elsif instance.deploying? -%>
+      <%= instance.chef_deployments.last.log.split("\n").last %>
+    <% end -%>
+  </div>
 </li>
