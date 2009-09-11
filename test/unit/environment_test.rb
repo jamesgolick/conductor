@@ -190,4 +190,18 @@ class EnvironmentTest < Test::Unit::TestCase
       @env.notify_of(:running, @app)
     end
   end
+
+  context "Deploying the whole environment" do
+    should "create a chef deployment for each of the running instances in the cluster" do
+      @env = Factory(:environment)
+      @db  = Factory(:mysql_master, :environment => @env)
+      @db.update_attribute :aws_state, "running"
+      @app = Factory(:app_server,   :environment => @env)
+      @app.update_attribute :aws_state, "running"
+
+      # can't seem to say that each instance expects it once, so oh well
+      Instance.any_instance.expects(:deploy).with(:now => true).times(2)
+      @env.deploy
+    end
+  end
 end

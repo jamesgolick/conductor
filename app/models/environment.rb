@@ -64,6 +64,10 @@ class Environment < ActiveRecord::Base
     master.nil?
   end
 
+  def deploy
+    instances.running.each { |i| i.deploy :now => true }
+  end
+
   protected
     def next_potential_master
       instances.app.running.first
