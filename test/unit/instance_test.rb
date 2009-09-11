@@ -79,6 +79,14 @@ class InstanceTest < Test::Unit::TestCase
       @instance.stubs(:chef_deployments).returns(mock(:create => nil))
       @instance.deploy
     end
+
+    should "create a chef deployment with :dont_deploy => true if :now => true" do
+      @instance  = Factory(:running_instance)
+      mock_assoc = mock
+      mock_assoc.expects(:create).with(:dont_deploy => true)
+      @instance.stubs(:chef_deployments).returns(mock_assoc)
+      @instance.deploy(:now => true)
+    end
   end
 
   context "Setting an instance as bootstrapped" do

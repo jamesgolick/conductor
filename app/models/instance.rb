@@ -97,8 +97,12 @@ class Instance < ActiveRecord::Base
     @dna ||= Dna.new(environment, role, cookbook_repository)
   end
 
-  def deploy
-    chef_deployments.create
+  def deploy(opts = {})
+    if opts[:now]
+      chef_deployments.create :dont_deploy => true
+    else
+      chef_deployments.create
+    end
   end
 
   def ready_for_deployment?
