@@ -1,8 +1,10 @@
 class Deployment < ActiveRecord::Base
   class_inheritable_accessor :command
 
+  attr_accessor :dont_deploy
+
   belongs_to    :instance
-  after_create  :launch_deployment_job
+  after_create  :launch_deployment_job, :unless => :dont_deploy
 
   def successful?
     exit_code == 0

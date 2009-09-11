@@ -84,4 +84,12 @@ class DeploymentTest < ActiveSupport::TestCase
     @deployment = Deployment.new
     assert_equal "", @deployment.last_line_of_log
   end
+
+  context "Creating a deployment with :dont_deploy => true" do
+    should "not perform the deployment" do
+      @deployment = Deployment.new :dont_deploy => true
+      @deployment.expects(:send_later).with(:perform_deployment).never
+      @deployment.save
+    end
+  end
 end
