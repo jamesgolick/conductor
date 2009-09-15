@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class SSHMultiMock
   attr_reader :servers_used, :responses, :exit_codes
 
@@ -25,7 +27,7 @@ class SSHMultiMock
       block.call(*response)
     end
 
-    {:exit_status => exit_codes[command]}
+    OpenStruct.new(:channels => [{:exit_status => exit_codes[command]}])
   end
 
   def loop; end

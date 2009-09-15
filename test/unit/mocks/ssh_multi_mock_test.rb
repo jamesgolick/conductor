@@ -41,6 +41,6 @@ class SSHMultiMockTestTest < ActiveSupport::TestCase
     @ssh.add_command_response "asdf", {:host => "whatever"}, :stdout, "the stdout data"
     channel = @ssh.exec("asdf") { |a,b,c| }
 
-    assert_equal 127, channel[:exit_status]
+    assert_equal 127, channel.channels.first[:exit_status]
   end
 end
