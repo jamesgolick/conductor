@@ -5,3 +5,4 @@ cookbook_repositories/
 spike.rb
 config/aws.yml
 cookbook-repo
+ideas.rb
