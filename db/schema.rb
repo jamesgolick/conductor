@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090915012205) do
+ActiveRecord::Schema.define(:version => 20090915012643) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "environment_id"
@@ -25,14 +25,6 @@ ActiveRecord::Schema.define(:version => 20090915012205) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "cookbook_clone_url"
-  end
-
-  create_table "chef_logs", :force => true do |t|
-    t.integer  "instance_id"
-    t.boolean  "successful"
-    t.text     "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "delayed_jobs", :force => true do |t|
