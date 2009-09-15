@@ -1,4 +1,4 @@
-class Deployment < ActiveRecord::Base
+class Log < ActiveRecord::Base
   class_inheritable_accessor :command
 
   attr_accessor :dont_deploy

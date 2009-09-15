@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090825144710) do
+ActiveRecord::Schema.define(:version => 20090915012205) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "environment_id"
@@ -48,15 +48,6 @@ ActiveRecord::Schema.define(:version => 20090825144710) do
     t.datetime "updated_at"
   end
 
-  create_table "deployments", :force => true do |t|
-    t.string   "type"
-    t.integer  "instance_id"
-    t.text     "log"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "exit_code"
-  end
-
   create_table "environments", :force => true do |t|
     t.integer  "application_id"
     t.string   "name"
@@ -78,6 +69,15 @@ ActiveRecord::Schema.define(:version => 20090825144710) do
     t.string   "dns_name"
     t.string   "private_dns_name"
     t.string   "aws_state"
+  end
+
+  create_table "logs", :force => true do |t|
+    t.string   "type"
+    t.integer  "instance_id"
+    t.text     "log"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "exit_code"
   end
 
   create_table "volumes", :force => true do |t|

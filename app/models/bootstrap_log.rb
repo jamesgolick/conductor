@@ -1,4 +1,4 @@
-class BootstrapDeployment < Deployment
+class BootstrapLog < Log
   self.command = 
       "apt-get update &&
         apt-get install -y git-core && 

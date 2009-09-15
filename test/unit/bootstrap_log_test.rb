@@ -1,10 +1,10 @@
 require File.expand_path('../../test_helper', __FILE__)
 
-class BootstrapDeploymentTest < ActiveSupport::TestCase
+class BootstrapLogTest < ActiveSupport::TestCase
   def setup
     Ec2.mode = :test
     @instance   = Factory(:instance, :role => "mysql_master")
-    @deployment = BootstrapDeployment.new :instance => @instance
+    @deployment = BootstrapLog.new :instance => @instance
   end 
 
   should "notify the instance of start" do
