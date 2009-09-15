@@ -10,8 +10,8 @@ class Instance < ActiveRecord::Base
   belongs_to :environment
 
   has_many   :chef_logs
-  has_many   :bootstrap_deployments
-  has_many   :chef_deployments
+  has_many   :bootstrap_logs
+  has_many   :chef_logs
 
   has_one    :address
 
@@ -85,7 +85,7 @@ class Instance < ActiveRecord::Base
   end
 
   def bootstrap
-    bootstrap_deployments.create
+    bootstrap_logs.create
   end
 
   # TODO: do something way better with this, like probably put it in an Application model which has_many environments

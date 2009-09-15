@@ -200,7 +200,7 @@ class InstanceTest < Test::Unit::TestCase
   context "Asking an instance to bootstrap" do
     should "create a bootstrap deployment" do
       @instance = Factory(:instance, :role => "mysql_master")
-      @instance.stubs(:bootstrap_deployments).returns(mock(:create => nil))
+      @instance.stubs(:bootstrap_logs).returns(mock(:create => nil))
       @instance.bootstrap
     end
   end
