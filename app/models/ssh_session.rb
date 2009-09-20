@@ -2,6 +2,9 @@ require 'net/ssh'
 require 'net/sftp'
 
 class SshSession
+  class Result
+  end
+
   attr_reader :ssh, :hosts
 
   def initialize(*hosts)
@@ -14,24 +17,11 @@ class SshSession
   end
 
   def run(command)
-    log = ""
-
     channel = ssh.exec(command) do |channel, stream, data|
-      line = build_line(stream, log, data)
-
-      yield(line) if block_given?
-
-      log << line
+      yield(channel[:host], stream.to_sym, data) if block_given?
     end
     ssh.loop
+    Result.new
   end
-
-  protected
-    def build_line(stream, log, data)
-      returning("") do |line|
-        line << "[#{stream.to_s.upcase}]: " if log.ends_with?("\n") || log.blank?
-        line << data
-      end
-    end
 end
 
