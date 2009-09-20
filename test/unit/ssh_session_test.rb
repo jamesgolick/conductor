@@ -51,7 +51,7 @@ class SshSessionTest < Test::Unit::TestCase
     end
   end
 
-  context "The result object" do
+  context "The result proxy object" do
     setup do
       @channels = [OpenStruct.new(:properties => {:host      => "server.com", 
                                                   :exit_code => 0}),
