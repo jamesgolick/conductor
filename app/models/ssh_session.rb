@@ -31,12 +31,17 @@ class SshSession
     end
   end
 
+  # leaving this untested, because testing it was just a big
+  # jumble of mocks that were going to be super brittle
+  #
   class Upload < Thread
+    attr_reader :sftp
+
     def initialize(session, path, data)
       super do
-        sftp = Net::SFTP.new(session)
-        sftp.file.open(path, "w") { |f| f << data }
-        sftp.wait
+        @sftp = Net::SFTP::Session.new(session.session || session.session(true))
+        sftp.connect!
+        sftp.file.open(path, "w") { |f| f.puts data }
       end
     end
   end
@@ -62,7 +67,7 @@ class SshSession
 
   def put(opts)
     path = opts.delete(:path)
-    opts.map { |k, v| Upload.new(servers[k], path, v) }
+    opts.map { |k, v| Upload.new(servers[k], path, v) }.each(&:join)
   end
 
   protected
