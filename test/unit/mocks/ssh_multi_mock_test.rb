@@ -37,10 +37,11 @@ class SSHMultiMockTestTest < ActiveSupport::TestCase
   end
 
   should "return a substitute for a channel object on exec" do
-    @ssh.set_exit_code "asdf", 127
+    @ssh.set_exit_code "myserver.com", "asdf", 127
     @ssh.add_command_response "asdf", {:host => "whatever"}, :stdout, "the stdout data"
     channel = @ssh.exec("asdf") { |a,b,c| }
 
-    assert_equal 127, channel.channels.first[:exit_status]
+    assert_equal({:exit_code => 127, :host => "myserver.com"}, 
+                  channel.channels.first.properties)
   end
 end

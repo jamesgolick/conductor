@@ -18,8 +18,9 @@ class SSHMultiMock
     responses[command] << response
   end
 
-  def set_exit_code(command, code)
-    exit_codes[command] = code
+  def set_exit_code(host, command, code)
+    exit_codes[host]        ||= {}
+    exit_codes[host][command] = code
   end
 
   def exec(command, &block)
@@ -27,9 +28,17 @@ class SSHMultiMock
       block.call(*response)
     end
 
-    OpenStruct.new(:channels => [{:exit_status => exit_codes[command]}])
+    OpenStruct.new(:channels => channels(command))
   end
 
   def loop; end
+
+  protected
+    def channels(command)
+      exit_codes.map do |k, v|
+        OpenStruct.new(:properties => {:host      => k, 
+                                       :exit_code => v[command]})
+      end
+    end
 end
 
