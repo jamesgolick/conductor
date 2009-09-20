@@ -1,8 +1,9 @@
 class SshRecipe
-  attr_reader :commands
+  attr_reader :commands, :ssh
 
-  def initialize(&block)
+  def initialize(*hosts, &block)
     @commands = []
+    @ssh      = SshSession.new(*hosts)
     instance_eval(&block)
   end
 
@@ -14,9 +15,9 @@ class SshRecipe
     @commands << [:put, *args]
   end
 
-  def exec(session)
+  def exec
     commands.each do |c|
-      result = session.send(c.shift, *c)
+      result = ssh.send(c.shift, *c)
       return result unless result.successful?
     end
   end
