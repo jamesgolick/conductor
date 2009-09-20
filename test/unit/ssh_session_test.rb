@@ -91,10 +91,10 @@ class SshSessionTest < Test::Unit::TestCase
     should "instantiate an SshSession::Upload for each server" do
       SshSession::Upload.expects(:new).
         with(@session.servers["james@myserver.com"], "/etc/chef/dna.json",
-              "some data for myserver.com")
+              "some data for myserver.com").returns(stub_everything)
       SshSession::Upload.expects(:new).
         with(@session.servers["fred@otherserver.com"], "/etc/chef/dna.json",
-              "some data for otherserver.com")
+              "some data for otherserver.com").returns(stub_everything)
       @session.put "james@myserver.com"     => "some data for myserver.com",
                    "fred@otherserver.com" => "some data for otherserver.com",
                    :path                    => "/etc/chef/dna.json"
