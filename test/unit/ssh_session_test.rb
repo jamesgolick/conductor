@@ -81,6 +81,19 @@ class SshSessionTest < Test::Unit::TestCase
         assert_equal 127, @result.failed_hosts.first.exit_code
       end
     end
+
+    context "should be instantiable with Upload objects" do
+      setup do
+        upload = stub
+        upload.stubs(:successful?).returns(false)
+        upload.stubs(:is_a?).with(SshSession::Upload).returns(true)
+        @result_proxy = SshSession::ResultProxy.new([upload])
+      end
+
+      should "treat them like Result objects" do
+        assert !@result_proxy.successful?
+      end
+    end
   end
 
   context "Putting some data" do

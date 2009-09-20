@@ -3,10 +3,9 @@ require 'net/sftp'
 
 class SshSession
   class ResultProxy < Array
-    def initialize(channels)
-      channels.each do |c|
-        push Result.new(c.properties)
-      end
+    def initialize(results)
+      push *results
+      first.respond_to?(:successful?) || map! { |c| Result.new(c.properties) }
     end
 
     def successful?
@@ -35,19 +34,18 @@ class SshSession
   # jumble of mocks that were going to be super brittle
   #
   class Upload < Thread
-    attr_reader :sftp, :failure, :error_message
+    attr_reader :sftp, :failure, :error_message, :host
 
     def initialize(session, path, data)
       super do
         begin
           @sftp = Net::SFTP::Session.new(session.session || session.session(true))
+          @host = [session.user, session.host].join("@")
           sftp.connect!
           sftp.file.open(path, "w") { |f| f.puts data }
         rescue Net::SFTP::StatusException => e
           @failure       = true
           @error_message = e.description
-        ensure
-          sftp.close
         end
       end
     end
@@ -77,8 +75,9 @@ class SshSession
   end
 
   def put(opts)
-    path = opts.delete(:path)
-    opts.map { |k, v| Upload.new(servers[k], path, v) }.each(&:join)
+    path    = opts.delete(:path)
+    results = opts.map { |k, v| Upload.new(servers[k], path, v) }.each(&:join)
+    ResultProxy.new results
   end
 
   protected
