@@ -35,14 +35,25 @@ class SshSession
   # jumble of mocks that were going to be super brittle
   #
   class Upload < Thread
-    attr_reader :sftp
+    attr_reader :sftp, :failure, :error_message
 
     def initialize(session, path, data)
       super do
-        @sftp = Net::SFTP::Session.new(session.session || session.session(true))
-        sftp.connect!
-        sftp.file.open(path, "w") { |f| f.puts data }
+        begin
+          @sftp = Net::SFTP::Session.new(session.session || session.session(true))
+          sftp.connect!
+          sftp.file.open(path, "w") { |f| f.puts data }
+        rescue Net::SFTP::StatusException => e
+          @failure       = true
+          @error_message = e.description
+        ensure
+          sftp.close
+        end
       end
+    end
+
+    def successful?
+      !failure
     end
   end
 
