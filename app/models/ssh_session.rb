@@ -31,15 +31,16 @@ class SshSession
     end
   end
 
-  attr_reader :ssh, :hosts
+  class Upload
+  end
+
+  attr_reader :ssh, :hosts, :servers
 
   def initialize(*hosts)
-    @ssh   = Net::SSH::Multi.start
-    @hosts = hosts
-
-    hosts.each do |h|
-      ssh.use(h, :forward_agent => true)
-    end
+    @ssh     = Net::SSH::Multi.start
+    @hosts   = hosts
+    @servers = {}
+    init_session
   end
 
   def run(command)
@@ -51,5 +52,17 @@ class SshSession
 
     ResultProxy.new(channel.channels)
   end
+
+  def put(opts)
+    path = opts.delete(:path)
+    opts.map { |k, v| Upload.new(servers[k], path, v) }
+  end
+
+  protected
+    def init_session
+      hosts.each do |h|
+        servers[h] = ssh.use(h, :forward_agent => true)
+      end
+    end
 end
 

@@ -10,6 +10,11 @@ class SshSessionTest < Test::Unit::TestCase
         expects(:use).with("james@myotherserver.com", :forward_agent => true)
       SshSession.new("james@myserver.com", "james@myotherserver.com")
     end
+
+    should "save the server objects in a hash, keyed by connection string" do
+      s = SshSession.new("james@myserver.com", "james@myotherserver.com")
+      assert_kind_of Net::SSH::Multi::Server, s.servers["james@myserver.com"]
+    end
   end
 
   context "Running an SSH command" do
@@ -75,6 +80,24 @@ class SshSessionTest < Test::Unit::TestCase
         assert_equal "server.com", @result.failed_hosts.first.host
         assert_equal 127, @result.failed_hosts.first.exit_code
       end
+    end
+  end
+
+  context "Putting some data" do
+    setup do
+      @session = SshSession.new("james@myserver.com", "fred@otherserver.com")
+    end
+
+    should "instantiate an SshSession::Upload for each server" do
+      SshSession::Upload.expects(:new).
+        with(@session.servers["james@myserver.com"], "/etc/chef/dna.json",
+              "some data for myserver.com")
+      SshSession::Upload.expects(:new).
+        with(@session.servers["fred@otherserver.com"], "/etc/chef/dna.json",
+              "some data for otherserver.com")
+      @session.put "james@myserver.com"     => "some data for myserver.com",
+                   "fred@otherserver.com" => "some data for otherserver.com",
+                   :path                    => "/etc/chef/dna.json"
     end
   end
 end
