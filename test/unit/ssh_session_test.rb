@@ -30,7 +30,7 @@ class SshSessionTest < Test::Unit::TestCase
     end
 
     should "return a result object" do
-      assert_kind_of SshSession::Result, @session.run("ls -la")
+      assert_kind_of SshSession::ResultProxy, @session.run("ls -la")
     end
 
     should "yield the results to the supplied block" do
@@ -42,6 +42,38 @@ class SshSessionTest < Test::Unit::TestCase
                   ["fred@otherserver.com", :stderr, "stderr output\n"]]
       expected.each_with_index do |y, i|
         assert_equal y, yields[i]
+      end
+    end
+  end
+
+  context "The result object" do
+    setup do
+      @channels = [OpenStruct.new(:properties => {:host      => "server.com", 
+                                                  :exit_code => 0}),
+                   OpenStruct.new(:properties => {:host      => "otherserver.com",
+                                                  :exit_code => 0})]
+      @result = SshSession::ResultProxy.new(@channels)
+    end
+
+    context "when all of the exit_codes are 0" do
+      should "be successful?" do
+        assert @result.successful?
+      end
+    end
+
+    context "when one or more hosts have failed" do
+      setup do
+        @channels.first.properties[:exit_code] = 127
+        @result = SshSession::ResultProxy.new(@channels)
+      end
+
+      should "not be successful?" do
+        assert !@result.successful?
+      end
+
+      should "return the hosts on which the command failed" do
+        assert_equal "server.com", @result.failed_hosts.first.host
+        assert_equal 127, @result.failed_hosts.first.exit_code
       end
     end
   end

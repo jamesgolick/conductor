@@ -2,7 +2,33 @@ require 'net/ssh'
 require 'net/sftp'
 
 class SshSession
+  class ResultProxy < Array
+    def initialize(channels)
+      channels.each do |c|
+        push Result.new(c.properties)
+      end
+    end
+
+    def successful?
+      all? { |r| r.successful? }
+    end
+
+    def failed_hosts
+      reject { |r| r.successful? }
+    end
+  end
+
   class Result
+    attr_reader :host, :exit_code
+
+    def initialize(properties)
+      @host      = properties[:host]
+      @exit_code = properties[:exit_code]
+    end
+
+    def successful?
+      exit_code == 0
+    end
   end
 
   attr_reader :ssh, :hosts
@@ -20,8 +46,10 @@ class SshSession
     channel = ssh.exec(command) do |channel, stream, data|
       yield(channel[:host], stream.to_sym, data) if block_given?
     end
+
     ssh.loop
-    Result.new
+
+    ResultProxy.new(channel.channels)
   end
 end
 
