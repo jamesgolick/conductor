@@ -100,4 +100,26 @@ class SshSessionTest < Test::Unit::TestCase
                    :path                    => "/etc/chef/dna.json"
     end
   end
+
+  context "Instantiating an upload object" do
+    setup do
+      @session     = SshSession.new("james@myserver.com")
+      @ssh_session = @session.servers.values.first
+    end
+
+    should "upload the data with net/sftp" do
+      sftp_mock         = mock
+      file_factory_mock = mock
+      file_mock         = mock
+      file_mock.expects(:<<).with("some data for myserver.com")
+      file_factory_mock.expects(:open).
+        with("/etc/chef/dna.json", "w").yields(file_mock)
+      sftp_mock.expects(:file).returns(file_factory_mock)
+      sftp_mock.expects(:wait)
+      Net::SFTP.expects(:new).with(@ssh_session).returns(sftp_mock)
+      @upload  = SshSession::Upload.new(@ssh_session,
+                                        "/etc/chef/dna.json",
+                                        "some data for myserver.com")
+    end
+  end
 end

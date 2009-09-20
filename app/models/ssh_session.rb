@@ -31,7 +31,14 @@ class SshSession
     end
   end
 
-  class Upload
+  class Upload < Thread
+    def initialize(session, path, data)
+      super do
+        sftp = Net::SFTP.new(session)
+        sftp.file.open(path, "w") { |f| f << data }
+        sftp.wait
+      end
+    end
   end
 
   attr_reader :ssh, :hosts, :servers
