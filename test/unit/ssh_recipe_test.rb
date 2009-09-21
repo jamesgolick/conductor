@@ -37,7 +37,7 @@ class SshRecipeTest < ActiveSupport::TestCase
 
     context "when a command fails" do
       setup do
-        @proxy = SshSession::ResultProxy.new([stub(:successful? => false)])
+        @proxy = Ssh::ResultProxy.new([stub(:successful? => false)])
         @recipe.ssh.stubs(:run).with("ls -la").returns(@proxy)
         @recipe.ssh.expects(:run).with("rm -Rf /").never
       end

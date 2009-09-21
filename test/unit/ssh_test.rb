@@ -1,25 +1,25 @@
 require File.expand_path('../../test_helper', __FILE__)
 require 'test/mocks/ssh_multi_mock'
 
-class SshSessionTest < Test::Unit::TestCase
+class SshTest < Test::Unit::TestCase
   context "Initializing an SSH session" do
     should "tell the ssh session to use all of the hosts" do
       Net::SSH::Multi::Session.any_instance.
         expects(:use).with("james@myserver.com", :forward_agent => true)
       Net::SSH::Multi::Session.any_instance.
         expects(:use).with("james@myotherserver.com", :forward_agent => true)
-      SshSession.new("james@myserver.com", "james@myotherserver.com")
+      Ssh.new("james@myserver.com", "james@myotherserver.com")
     end
 
     should "save the server objects in a hash, keyed by connection string" do
-      s = SshSession.new("james@myserver.com", "james@myotherserver.com")
+      s = Ssh.new("james@myserver.com", "james@myotherserver.com")
       assert_kind_of Net::SSH::Multi::Server, s.servers["james@myserver.com"]
     end
   end
 
   context "Running an SSH command" do
     setup do
-      @session    = SshSession.new("james@myserver.com", "fred@otherserver.com")
+      @session    = Ssh.new("james@myserver.com", "fred@otherserver.com")
       @multi_mock = SSHMultiMock.new
       @multi_mock.add_command_response "ls -la", {:host => "james@myserver.com"}, 
                                         :stdout, "stdout"
@@ -35,7 +35,7 @@ class SshSessionTest < Test::Unit::TestCase
     end
 
     should "return a result object" do
-      assert_kind_of SshSession::ResultProxy, @session.run("ls -la")
+      assert_kind_of Ssh::ResultProxy, @session.run("ls -la")
     end
 
     should "yield the results to the supplied block" do
@@ -57,7 +57,7 @@ class SshSessionTest < Test::Unit::TestCase
                                                   :exit_code => 0}),
                    OpenStruct.new(:properties => {:host      => "otherserver.com",
                                                   :exit_code => 0})]
-      @result = SshSession::ResultProxy.new(@channels)
+      @result = Ssh::ResultProxy.new(@channels)
     end
 
     context "when all of the exit_codes are 0" do
@@ -69,7 +69,7 @@ class SshSessionTest < Test::Unit::TestCase
     context "when one or more hosts have failed" do
       setup do
         @channels.first.properties[:exit_code] = 127
-        @result = SshSession::ResultProxy.new(@channels)
+        @result = Ssh::ResultProxy.new(@channels)
       end
 
       should "not be successful?" do
@@ -86,8 +86,8 @@ class SshSessionTest < Test::Unit::TestCase
       setup do
         upload = stub
         upload.stubs(:successful?).returns(false)
-        upload.stubs(:is_a?).with(SshSession::Upload).returns(true)
-        @result_proxy = SshSession::ResultProxy.new([upload])
+        upload.stubs(:is_a?).with(Ssh::Upload).returns(true)
+        @result_proxy = Ssh::ResultProxy.new([upload])
       end
 
       should "treat them like Result objects" do
@@ -98,14 +98,14 @@ class SshSessionTest < Test::Unit::TestCase
 
   context "Putting some data" do
     setup do
-      @session = SshSession.new("james@myserver.com", "fred@otherserver.com")
+      @session = Ssh.new("james@myserver.com", "fred@otherserver.com")
     end
 
-    should "instantiate an SshSession::Upload for each server" do
-      SshSession::Upload.expects(:new).
+    should "instantiate an Ssh::Upload for each server" do
+      Ssh::Upload.expects(:new).
         with(@session.servers["james@myserver.com"], "/etc/chef/dna.json",
               "some data for myserver.com").returns(stub_everything)
-      SshSession::Upload.expects(:new).
+      Ssh::Upload.expects(:new).
         with(@session.servers["fred@otherserver.com"], "/etc/chef/dna.json",
               "some data for otherserver.com").returns(stub_everything)
       @session.put "james@myserver.com"     => "some data for myserver.com",

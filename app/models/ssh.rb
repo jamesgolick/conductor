@@ -1,7 +1,7 @@
 require 'net/ssh'
 require 'net/sftp'
 
-class SshSession
+class Ssh
   class ResultProxy < Array
     def initialize(results)
       push *results

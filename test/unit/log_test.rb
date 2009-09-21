@@ -19,14 +19,14 @@ class LogTest < ActiveSupport::TestCase
       session_mock.expects(:run).
         with(Log.command).
           returns(stub_everything)
-      SshSession.expects(:new).with("james@myserver.com").returns(session_mock)
+      Ssh.expects(:new).with("james@myserver.com").returns(session_mock)
 
       @deployment = Log.new :instance => @instance
       @deployment.perform_deployment
     end
 
     should "store the log of the session" do
-      SshSession.any_instance.stubs(:run).yields("the log").returns(CommandResult.new("", "the log", 0))
+      Ssh.any_instance.stubs(:run).yields("the log").returns(CommandResult.new("", "the log", 0))
       Log.any_instance.stubs(:notify_instance)
       @deployment = Log.new :instance => @instance
       @deployment.perform_deployment
@@ -35,7 +35,7 @@ class LogTest < ActiveSupport::TestCase
     end
 
     should "store the exit code of the session" do
-      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
+      Ssh.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
       @deployment = Log.new :instance => @instance
       @deployment.perform_deployment
 
@@ -43,7 +43,7 @@ class LogTest < ActiveSupport::TestCase
     end
 
     should "call #notify_instance_of_start during the deployment" do
-      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
+      Ssh.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
       @deployment = Log.create :instance => @instance
       @deployment = Log.new :instance => @instance
       @deployment.expects(:notify_instance_of_start)
@@ -51,14 +51,14 @@ class LogTest < ActiveSupport::TestCase
     end
 
     should "call #notify_instance_of_success if the deployment is successful" do
-      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 0))
+      Ssh.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 0))
       Log.any_instance.expects(:notify_instance_of_success)
       @deployment = Log.new :instance => @instance
       @deployment.perform_deployment
     end
 
     should "call #notify_instance_of_success if the deployment is successful" do
-      SshSession.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
+      Ssh.any_instance.stubs(:run).returns(CommandResult.new("", "the log", 127))
       Log.any_instance.expects(:notify_instance_of_failure)
       @deployment = Log.new :instance => @instance
       @deployment.perform_deployment

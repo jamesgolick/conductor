@@ -31,7 +31,7 @@ class Log < ActiveRecord::Base
     end
 
     def ssh
-      @ssh ||= SshSession.new(instance.connection_string)
+      @ssh ||= Ssh.new(instance.connection_string)
     end
 
     def notify_instance_of_success

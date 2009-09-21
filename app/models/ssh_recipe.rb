@@ -3,7 +3,7 @@ class SshRecipe
 
   def initialize(*hosts, &block)
     @commands = []
-    @ssh      = SshSession.new(*hosts)
+    @ssh      = Ssh.new(*hosts)
     instance_eval(&block)
   end
 
