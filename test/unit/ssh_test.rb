@@ -77,8 +77,8 @@ class SshTest < Test::Unit::TestCase
       end
 
       should "return the hosts on which the command failed" do
-        assert_equal "server.com", @result.failed_hosts.first.host
-        assert_equal 127, @result.failed_hosts.first.exit_code
+        assert_equal "server.com", @result.failures.first.host
+        assert_equal 127, @result.failures.first.exit_code
       end
     end
 

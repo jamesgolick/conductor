@@ -12,7 +12,7 @@ class Ssh
       all? { |r| r.successful? }
     end
 
-    def failed_hosts
+    def failures
       reject { |r| r.successful? }
     end
   end
