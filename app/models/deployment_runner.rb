@@ -35,11 +35,13 @@ class DeploymentRunner
     end
 
     def handle_failure(result)
+      failed_hosts = result.failed_hosts.join(', ')
+
       if result.cancelled?
-        logger.system_message "Deployment was cancelled because a command failed on one or more instances"
+        logger.system_message "Deployment was cancelled because a command failed on [#{failed_hosts}]"
         notify_instances :cancelled
       else
-        logger.system_message "Deployment failed on one or more instances."
+        logger.system_message "Deployment failed on [#{failed_hosts}]."
         notify_instances :failure
       end
     end
