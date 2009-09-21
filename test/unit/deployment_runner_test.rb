@@ -16,6 +16,10 @@ class DeploymentRunnerTest < ActiveSupport::TestCase
   end
 
   context "Running a deployment" do
+    setup do
+      @runner.stubs(:build_ssh_session).returns(SshSession.new {})
+    end
+
     should "run the deployment" do
       @instance.expects(:deployment_event).with(@runner, :start)
       @runner.ssh_session.expects(:execute).returns(mock(:successful? => true))
@@ -28,6 +32,13 @@ class DeploymentRunnerTest < ActiveSupport::TestCase
       @runner.ssh_session.expects(:execute).returns(mock(:successful? => false))
       @instance.expects(:deployment_event).with(@runner, :failure)
       @runner.perform_deployment
+    end
+  end
+
+  context "The ssh session" do
+    should "call #build_ssh_session, which should be impld by the subclass" do
+      @runner.expects(:build_ssh_session).returns(stub_everything)
+      @runner.ssh_session
     end
   end
 end

@@ -11,21 +11,8 @@ class DeploymentRunner
     handle_result ssh_session.execute
   end
 
-  #def perform_deployment
-  #  set_instance_states(:deploying)
-  #  result = @session = SshSession.new(*instances.map(&:connection_string)) do
-  #    put build_put_command
-  #    run "cd /var/chef && git pull"
-  #    run "/usr/bin/chef-solo -j /etc/chef/dna.json"
-  #    before_command { |command| logger.system_message("Running command #{command}.") }
-  #    on_data { |host, stream, data| logger.log(host, stream, data) }
-  #  end.execute
-
-  #  result.successful? ? log_success : log_failure(result)
-  #end
-
   def ssh_session
-    @ssh_session ||= SshSession.new {}
+    @ssh_session ||= create_ssh_session
   end
 
   protected
@@ -49,6 +36,17 @@ class DeploymentRunner
     def handle_failure(result)
       logger.system_message "Deployment failed on one or more instances."
       notify_instances :failure
+    end
+
+    def create_ssh_session
+      returning build_ssh_session do |s|
+        s.before_command { |c| logger.system_message("Running command #{c}.") }
+        s.on_data        { |host, stream, data| logger.log(host, stream, data) }
+      end
+    end
+
+    def build_ssh_session
+      raise NotImplementedError, "Implement #build_ssh_session in subclasses."
     end
 end
 
