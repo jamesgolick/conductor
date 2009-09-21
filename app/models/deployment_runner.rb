@@ -8,6 +8,7 @@ class DeploymentRunner
 
   def perform_deployment
     notify_instances(:start)
+    handle_result ssh_session.execute
   end
 
   #def perform_deployment
@@ -22,6 +23,11 @@ class DeploymentRunner
 
   #  result.successful? ? log_success : log_failure(result)
   #end
+
+  def ssh_session
+    @ssh_session ||= SshSession.new {}
+  end
+
   protected
     def deployment_type
       raise NotImplementedError, "Subclasses must implement #deployment_type"
@@ -29,6 +35,15 @@ class DeploymentRunner
 
     def notify_instances(event)
       instances.each { |i| i.deployment_event(self, event) }
+    end
+
+    def handle_result(result)
+      result.successful? ? handle_success(result) : handle_failure(result)
+    end
+
+    def handle_success(result)
+      logger.system_message "Deployment ran successfully."
+      notify_instances :successful
     end
 end
 

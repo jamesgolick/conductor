@@ -16,8 +16,10 @@ class DeploymentRunnerTest < ActiveSupport::TestCase
   end
 
   context "Running a deployment" do
-    should "notify the instances" do
+    should "run the deployment" do
       @instance.expects(:deployment_event).with(@runner, :start)
+      @runner.ssh_session.expects(:execute).returns(mock(:successful? => true))
+      @instance.expects(:deployment_event).with(@runner, :successful)
       @runner.perform_deployment
     end
   end
