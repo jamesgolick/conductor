@@ -24,5 +24,11 @@ class DeploymentLoggerTest < ActiveSupport::TestCase
       chef_log = @instance.chef_logs.reload
       assert_equal "[STDOUT]: Some awesome STDOUT data.", chef_log.first.log
     end
+
+    should "log to all instances when there's a system message" do
+      @logger.system_message("Running command ls -la")
+      chef_log = @instance.chef_logs.reload
+      assert_equal "[SYSTEM]: Running command ls -la", chef_log.first.log
+    end
   end
 end
