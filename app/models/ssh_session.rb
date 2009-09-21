@@ -7,6 +7,10 @@ class SshSession
     def cancelled?
       cancelled
     end
+
+    def failed_hosts
+      failures.first.failures.map(&:host)
+    end
   end
 
   attr_reader :commands, :ssh

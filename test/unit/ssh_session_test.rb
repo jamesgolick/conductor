@@ -94,4 +94,20 @@ class SshSessionTest < ActiveSupport::TestCase
       end
     end
   end
+  
+  context "SshSession::ResultSet" do
+    setup do
+      @result_set = SshSession::ResultSet.new
+      success     = Ssh::Result.new :host      => "whatever.com",
+                                    :exit_code => 0
+      failure     = Ssh::Result.new :host      => "otherstuff.com",
+                                    :exit_code => 1
+      @result_set << Ssh::ResultProxy.new(success)
+      @result_set << Ssh::ResultProxy.new(failure)
+    end
+
+    should "be able to return the hosts upon which a command failed" do
+      assert_equal ["otherstuff.com"], @result_set.failed_hosts
+    end
+  end
 end
