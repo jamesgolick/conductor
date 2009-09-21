@@ -118,6 +118,14 @@ class Instance < ActiveRecord::Base
     address.nil? ? dns_name : address.address
   end
 
+  def deployment_event(runner, event)
+    if runner.is_a?(ChefDeploymentRunner)
+      update_attribute :config_state, {:start   => "deploying",
+                                       :success => "deployed",
+                                       :failure => "deployment_failed"}[event]
+    end
+  end
+
   protected
     def database_server_is_running
       if !environment.nil? && !mysql_master? && !environment.has_database_server?

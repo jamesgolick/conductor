@@ -296,6 +296,15 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  should "understand deployment_events from ChefDeploymentRunner" do
+    @instance.deployment_event(ChefDeploymentRunner.new, :start)
+    assert_equal "deploying", @instance.config_state
+    @instance.deployment_event(ChefDeploymentRunner.new, :success)
+    assert_equal "deployed", @instance.config_state
+    @instance.deployment_event(ChefDeploymentRunner.new, :failure)
+    assert_equal "deployment_failed", @instance.config_state
+  end
+
   protected
     def describe_instances_result
       {
