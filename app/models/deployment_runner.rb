@@ -4,6 +4,7 @@ class DeploymentRunner
   def initialize(*instances)
     @instances = instances
     @logger    = DeploymentLogger.new(deployment_type, *instances)
+    send_later :perform_deployment
   end
 
   def perform_deployment
