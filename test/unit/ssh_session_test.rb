@@ -45,6 +45,18 @@ class SshSessionTest < ActiveSupport::TestCase
       assert_equal [[:run, "ls -la"], [:run, "rm -Rf /"]], commands
     end
 
+    should "pass the data from Ssh#run along to the on_data callback" do
+      @recipe.ssh.stubs(:run).yields("myserver.com", :stdout, "data").
+        returns(stub(:successful? => true))
+      calls = []
+      @recipe.on_data do |host, stream, data|
+        calls << [host, stream, data]
+      end
+      @recipe.execute
+
+      assert_equal ["myserver.com", :stdout, "data"], calls.first
+    end
+
     context "when a command fails" do
       setup do
         @proxy = Ssh::ResultProxy.new([stub(:successful? => false)])

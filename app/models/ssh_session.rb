@@ -19,10 +19,14 @@ class SshSession
     @before_command = block
   end
 
+  def on_data(&block)
+    @on_data = block
+  end
+
   def execute
     commands.each do |c|
       run_before_command(c)
-      result = ssh.send(c.shift, *c)
+      result = ssh.send(c.shift, *c, &@on_data)
       return result unless result.successful?
     end
   end
