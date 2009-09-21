@@ -45,5 +45,10 @@ class DeploymentRunner
       logger.system_message "Deployment ran successfully."
       notify_instances :successful
     end
+
+    def handle_failure(result)
+      logger.system_message "Deployment failed on one or more instances."
+      notify_instances :failure
+    end
 end
 

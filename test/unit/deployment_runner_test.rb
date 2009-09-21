@@ -22,5 +22,12 @@ class DeploymentRunnerTest < ActiveSupport::TestCase
       @instance.expects(:deployment_event).with(@runner, :successful)
       @runner.perform_deployment
     end
+
+    should "notify the instances if one fails" do
+      @instance.expects(:deployment_event).with(@runner, :start)
+      @runner.ssh_session.expects(:execute).returns(mock(:successful? => false))
+      @instance.expects(:deployment_event).with(@runner, :failure)
+      @runner.perform_deployment
+    end
   end
 end
