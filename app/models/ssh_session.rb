@@ -15,7 +15,7 @@ class SshSession
     @commands << [:put, *args]
   end
 
-  def exec
+  def execute
     commands.each do |c|
       result = ssh.send(c.shift, *c)
       return result unless result.successful?

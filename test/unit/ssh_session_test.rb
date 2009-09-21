@@ -32,7 +32,7 @@ class SshSessionTest < ActiveSupport::TestCase
     should "run it on the session" do
       @recipe.ssh.expects(:run).with("ls -la").returns(stub(:successful? => true))
       @recipe.ssh.expects(:run).with("rm -Rf /").returns(stub(:successful? => true))
-      @recipe.exec
+      @recipe.execute
     end
 
     context "when a command fails" do
@@ -43,7 +43,7 @@ class SshSessionTest < ActiveSupport::TestCase
       end
 
       should "stop running the commands and return the failing resultproxy" do
-        assert_equal @proxy, @recipe.exec
+        assert_equal @proxy, @recipe.execute
       end
     end
   end
