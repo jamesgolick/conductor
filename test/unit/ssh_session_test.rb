@@ -35,6 +35,16 @@ class SshSessionTest < ActiveSupport::TestCase
       @recipe.execute
     end
 
+    should "call the before_command callback before a command is run" do
+      @recipe.ssh.stubs(:run).returns(stub(:successful? => true))
+      commands = []
+      @recipe.before_command do |t, c|
+        commands << [t,c]
+      end
+      @recipe.execute
+      assert_equal [[:run, "ls -la"], [:run, "rm -Rf /"]], commands
+    end
+
     context "when a command fails" do
       setup do
         @proxy = Ssh::ResultProxy.new([stub(:successful? => false)])
