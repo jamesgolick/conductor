@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'activesupport'
+require 'fileutils'
+
+if ARGV.length != 2
+  puts "Usage: script/refactor/rename old_model_name new_model_name"
+  exit 1
+end
+
+old_model_name = ARGV.first
+new_model_name = ARGV.last
+
+old_filename   = "app/models/#{old_model_name}.rb"
+new_filename   = "app/models/#{new_model_name}.rb"
+
+puts "Moving #{old_filename} to #{new_filename}."
+`git mv #{old_filename} #{new_filename}`
+
+old_testname   = "test/unit/#{old_model_name}_test.rb"
+new_testname   = "test/unit/#{new_model_name}_test.rb"
+
+puts "Moving #{old_testname} to #{new_testname}."
+`git mv #{old_testname} #{new_testname}`
+
+puts "Committing moved files"
+`git commit -m"Renamed #{old_model_name} to #{new_model_name} (files)."`
+
+old_const_name = old_model_name.camelize
+new_const_name = new_model_name.camelize
+pattern        = /#{old_const_name}/
+
+puts "Attempting to rename all references of #{old_const_name} to #{new_const_name}."
+Dir["{app,lib,test}/**/*.rb"].each do |f|
+  unless File.directory?(f)
+    contents = File.read(f)
+    if contents.match(pattern)
+      puts "\tMatch found in #{f}"
+      File.open(f, "w") { |f| f << contents.gsub(pattern, new_const_name) }
+    end
+  end
+end
+
+puts "Done. Check the output of git diff to see what has been changed."
