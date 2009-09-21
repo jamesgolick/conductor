@@ -3,4 +3,22 @@ class ChefDeploymentRunner < DeploymentRunner
     def deployment_type
       :chef
     end
+
+    def build_ssh_session
+      put_arguments = dna.merge(:path => "/etc/chef/dna.json")
+      SshSession.new do
+        run "if [ -d /var/chef ]; then
+          cd /var/chef && git pull
+        else
+          git clone git@github.com:giraffesoft/conductor-cookbooks.git /var/chef
+        fi"
+        put put_arguments
+        run "source /etc/environment &&
+              /opt/ruby-enterprise/bin/chef-solo -j /etc/chef/dna.json"
+      end
+    end
+
+    def dna
+      Hash[*instances.map { |i| [i.connection_string, i.to_dna] }.flatten]
+    end
 end
