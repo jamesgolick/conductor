@@ -24,10 +24,12 @@ class SshSession
   end
 
   def execute
-    commands.each do |c|
-      run_before_command(c)
-      result = ssh.send(c.shift, *c, &@on_data)
-      return result unless result.successful?
+    returning [] do |r|
+      commands.each do |c|
+        run_before_command(c)
+        r << ssh.send(c.shift, *c, &@on_data)
+        break unless r.last.successful?
+      end
     end
   end
 

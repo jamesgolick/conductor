@@ -64,8 +64,8 @@ class SshSessionTest < ActiveSupport::TestCase
         @recipe.ssh.expects(:run).with("rm -Rf /").never
       end
 
-      should "stop running the commands and return the failing resultproxy" do
-        assert_equal @proxy, @recipe.execute
+      should "stop running the commands and return the result set" do
+        assert_equal [@proxy], @recipe.execute
       end
     end
   end
