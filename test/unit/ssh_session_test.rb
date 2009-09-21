@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class SshRecipeTest < ActiveSupport::TestCase
+class SshSessionTest < ActiveSupport::TestCase
   context "Instantiating an ssh recipe" do
     setup do
-      @recipe = SshRecipe.new("james@myserver.com") do
+      @recipe = SshSession.new("james@myserver.com") do
         put "asdf"
         run "ls -la"
         run "other stuffs"
@@ -23,7 +23,7 @@ class SshRecipeTest < ActiveSupport::TestCase
 
   context "Running a recipe" do
     setup do
-      @recipe  = SshRecipe.new do
+      @recipe  = SshSession.new do
         run "ls -la"
         run "rm -Rf /"
       end

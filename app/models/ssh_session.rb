@@ -1,4 +1,4 @@
-class SshRecipe
+class SshSession
   attr_reader :commands, :ssh
 
   def initialize(*hosts, &block)
