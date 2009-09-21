@@ -72,8 +72,25 @@ class SshSessionTest < ActiveSupport::TestCase
         assert_kind_of SshSession::ResultSet, @recipe.execute
       end
 
-      should "be a result of cancelled" do
+      should "be a cancelled result" do
         assert @recipe.execute.cancelled?
+      end
+    end
+
+    context "if the last command fails" do
+      setup do
+        @win  = Ssh::ResultProxy.new([stub(:successful? => true)])
+        @fail = Ssh::ResultProxy.new([stub(:successful? => false)])
+        @recipe.ssh.stubs(:run).with("ls -la").returns(@win)
+        @recipe.ssh.expects(:run).with("rm -Rf /").returns(@fail)
+      end
+
+      should "not be a result of cancelled" do
+        assert !@recipe.execute.cancelled?
+      end
+
+      should "be a failure" do
+        assert !@recipe.execute.successful?
       end
     end
   end

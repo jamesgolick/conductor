@@ -51,7 +51,7 @@ class SshSession
         run_before_command(c)
         result_set << ssh.send(c.shift, *c, &@on_data)
         if !result_set.last.successful?
-          result_set.cancelled = true
+          result_set.cancelled = true if c != commands.last
           break
         end
       end
