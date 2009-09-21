@@ -29,8 +29,17 @@ class DeploymentRunnerTest < ActiveSupport::TestCase
 
     should "notify the instances if one fails" do
       @instance.expects(:deployment_event).with(@runner, :start)
-      @runner.ssh_session.expects(:execute).returns(mock(:successful? => false))
+      proxy_mock = stub(:cancelled? => false, :successful? => false)
+      @runner.ssh_session.expects(:execute).returns(proxy_mock)
       @instance.expects(:deployment_event).with(@runner, :failure)
+      @runner.perform_deployment
+    end
+
+    should "notify the instance if the deployment is cancelled" do
+      @instance.expects(:deployment_event).with(@runner, :start)
+      proxy_mock = stub(:cancelled? => true, :successful? => false)
+      @runner.ssh_session.expects(:execute).returns(proxy_mock)
+      @instance.expects(:deployment_event).with(@runner, :cancelled)
       @runner.perform_deployment
     end
   end

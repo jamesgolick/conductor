@@ -35,8 +35,13 @@ class DeploymentRunner
     end
 
     def handle_failure(result)
-      logger.system_message "Deployment failed on one or more instances."
-      notify_instances :failure
+      if result.cancelled?
+        logger.system_message "Deployment was cancelled because a command failed on one or more instances"
+        notify_instances :cancelled
+      else
+        logger.system_message "Deployment failed on one or more instances."
+        notify_instances :failure
+      end
     end
 
     def create_ssh_session
