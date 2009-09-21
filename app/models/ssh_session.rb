@@ -1,4 +1,14 @@
 class SshSession
+  class ResultSet < Ssh::ResultProxy
+    attr_accessor :cancelled
+
+    def initialize; end
+
+    def cancelled?
+      cancelled
+    end
+  end
+
   attr_reader :commands, :ssh
 
   def initialize(*hosts, &block)
@@ -24,11 +34,14 @@ class SshSession
   end
 
   def execute
-    returning [] do |r|
+    returning ResultSet.new do |r|
       commands.each do |c|
         run_before_command(c)
         r << ssh.send(c.shift, *c, &@on_data)
-        break unless r.last.successful?
+        if !r.last.successful?
+          r.cancelled = true
+          break
+        end
       end
     end
   end

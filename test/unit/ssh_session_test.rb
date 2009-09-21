@@ -67,6 +67,14 @@ class SshSessionTest < ActiveSupport::TestCase
       should "stop running the commands and return the result set" do
         assert_equal [@proxy], @recipe.execute
       end
+
+      should "return a ResultSet" do
+        assert_kind_of SshSession::ResultSet, @recipe.execute
+      end
+
+      should "be a result of cancelled" do
+        assert @recipe.execute.cancelled?
+      end
     end
   end
 end
