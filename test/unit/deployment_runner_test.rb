@@ -3,17 +3,22 @@ require 'test_helper'
 class DeploymentRunnerTest < ActiveSupport::TestCase
   def setup
     Ec2.mode = :test
+    DeploymentRunner.any_instance.stubs(:deployment_type).returns(:chef)
+    @instance = Factory(:mysql_master)
+    @runner   = DeploymentRunner.new(@instance)
   end
 
-  context "Running a deployment on one instance" do
-    setup do
-      @instance = Factory(:mysql_master)
-      @runner   = DeploymentRunner.new(@instance)
+  context "Creating a deployment on one instance" do
+    should "create a deployment logger" do
+      assert_equal [@instance], @runner.logger.instances
+      assert_equal :chef, @runner.logger.log_type
     end
+  end
 
-    should "create a chef log for that instance" do
+  context "Running a deployment" do
+    should "notify the instances" do
+      @instance.expects(:deployment_event).with(@runner, :start)
       @runner.perform_deployment
-      assert_equal 1, @instance.chef_logs.count
     end
   end
 end
