@@ -35,14 +35,7 @@ class SshSession
 
   def execute
     returning ResultSet.new do |r|
-      commands.each do |c|
-        run_before_command(c)
-        r << ssh.send(c.shift, *c, &@on_data)
-        if !r.last.successful?
-          r.cancelled = true
-          break
-        end
-      end
+      run_commands(r)
     end
   end
 
@@ -50,6 +43,17 @@ class SshSession
     def run_before_command(command)
       unless @before_command.nil?
         @before_command.call(command.first, command[1])
+      end
+    end
+
+    def run_commands(result_set)
+      commands.each do |c|
+        run_before_command(c)
+        result_set << ssh.send(c.shift, *c, &@on_data)
+        if !result_set.last.successful?
+          result_set.cancelled = true
+          break
+        end
       end
     end
 end
