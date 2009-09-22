@@ -120,9 +120,11 @@ class Instance < ActiveRecord::Base
 
   def deployment_event(runner, event)
     if runner.is_a?(ChefDeploymentRunner)
-      update_attribute :config_state, {:start      => "deploying",
-                                       :successful => "deployed",
-                                       :failure    => "deployment_failed"}[event]
+      event_map = {:start      => "deploying",
+                   :successful => "deployed",
+                   :failure    => "deployment_failed",
+                   :cancelled  => "deployment_cancelled"}
+      update_attribute :config_state, event_map[event]
     end
   end
 

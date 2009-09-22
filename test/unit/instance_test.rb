@@ -303,6 +303,8 @@ class InstanceTest < Test::Unit::TestCase
     assert_equal "deployed", @instance.config_state
     @instance.deployment_event(ChefDeploymentRunner.new, :failure)
     assert_equal "deployment_failed", @instance.config_state
+    @instance.deployment_event(ChefDeploymentRunner.new, :cancelled)
+    assert_equal "deployment_cancelled", @instance.config_state
   end
 
   protected
