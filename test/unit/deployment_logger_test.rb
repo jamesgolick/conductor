@@ -22,13 +22,19 @@ class DeploymentLoggerTest < ActiveSupport::TestCase
     should "log to the appropriate chef_log instance (and save)" do
       @logger.log(@instance.dns_name, :stdout, "Some awesome STDOUT data.")
       chef_log = @instance.chef_logs.reload
-      assert_equal "[STDOUT]: Some awesome STDOUT data.", chef_log.first.log
+      assert_equal "[STDOUT]: Some awesome STDOUT data.\n", chef_log.first.log
     end
 
     should "log to all instances when there's a system message" do
       @logger.system_message("Running command ls -la")
       chef_log = @instance.chef_logs.reload
-      assert_equal "[SYSTEM]: Running command ls -la", chef_log.first.log
+      assert_equal "[SYSTEM]: Running command ls -la\n", chef_log.first.log
+    end
+
+    should "not append \\n if one is already at the end of the line" do
+      @logger.system_message("Running command ls -la\n")
+      chef_log = @instance.chef_logs.reload
+      assert_equal "[SYSTEM]: Running command ls -la\n", chef_log.first.log
     end
   end
 end

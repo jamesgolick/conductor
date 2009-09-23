@@ -30,7 +30,7 @@ class DeploymentLogger
     end
 
     def build_line(stream, data)
-      "[#{stream.to_s.upcase}]: #{data}"
+      "[#{stream.to_s.upcase}]: #{data}#{"\n" unless data.ends_with?("\n")}"
     end
 
     def log_for(host)
