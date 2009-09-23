@@ -91,6 +91,8 @@ class InstanceTest < Test::Unit::TestCase
     setup do
       @environment.stubs(:has_database_server?).returns(true)
       @instance = Factory(:instance, :environment => @environment)
+      @bootstrap_stub = stub(:perform_deployment => nil)
+      BootstrapDeploymentRunner.stubs(:new).returns(@bootstrap_stub)
     end
 
     context "going in to running" do
@@ -117,6 +119,13 @@ class InstanceTest < Test::Unit::TestCase
 
       before_should "notify the environment" do
         @instance.environment.expects(:notify_of).with(:running, @instance)
+      end
+
+      should "create a bootstrap deployment" do
+        assert_received(BootstrapDeploymentRunner, :new) do |e|
+          e.with(@instance)
+        end
+        assert_received(@bootstrap_stub, :perform_deployment)
       end
     end
   end

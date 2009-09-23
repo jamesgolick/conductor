@@ -52,8 +52,13 @@ class Instance < ActiveRecord::Base
                       :zone             => details[:aws_availability_zone],
                       :aws_state        => details[:aws_state]
     if running?
+      bootstrap
       environment.notify_of(:running, self)
     end
+  end
+
+  def bootstrap
+    BootstrapDeploymentRunner.new(*self).perform_deployment
   end
 
   def aws_state_changed?
