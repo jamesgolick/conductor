@@ -3,7 +3,8 @@ require File.expand_path('../../test_helper', __FILE__)
 class DnaTest < ActiveSupport::TestCase
   context "initializing the dna for an instance type" do
     setup do
-      CookbookRepository.any_instance.stubs(:clone).stubs(:pull)
+      CookbookRepository.any_instance.stubs(:clone)
+      CookbookRepository.any_instance.stubs(:pull)
       @repo = CookbookRepository.new("doesn't matter")
       @repo.stubs(:read).returns("some_attr 'a value'")
       @environment = Factory(:environment)
