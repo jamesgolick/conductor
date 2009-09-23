@@ -1,6 +1,4 @@
 class Instance < ActiveRecord::Base
-  class WaitForConfiguredDbServer < RuntimeError; end
-
   class << self
     def ami_for(instance_size)
       %w(m1.small c1.medium).include?(instance_size) ? "ami-ef48af86" : "ami-e257b08b"
@@ -27,34 +25,14 @@ class Instance < ActiveRecord::Base
 
   validate :database_server_is_running
 
-  after_create   :launch_ec2_instance, :launch_wait_for_state_change_job, :notify_environment_of_launch
-  before_destroy :set_state_to_terminating, :terminate_ec2_instance, :notify_environment_of_termination
+  after_create   :launch_ec2_instance, :launch_wait_for_state_change_job, 
+                 :notify_environment_of_launch
+  before_destroy :set_state_to_terminating, :terminate_ec2_instance, 
+                 :notify_environment_of_termination
 
   named_scope    :running,    :conditions => {:aws_state    => "running"}
   named_scope    :configured, :conditions => {:config_state => "deployed"}
   named_scope    :app,        :conditions => {:role         => "app"}
-
-  def bootstrapped!
-    update_attribute :config_state, 'bootstrapped'
-    deploy
-  end
-
-  def bootstrapping!
-    update_attribute :config_state, 'bootstrapping'
-  end
-
-  def deploying!
-    assert_ready_for_deployment
-    update_attribute :config_state, "deploying"
-  end
-
-  def deployed!
-    update_attribute :config_state, "deployed"
-  end
-
-  def deployment_failed!
-    update_attribute :config_state, "deployment_failed"
-  end
 
   def update_instance_state
     details = aws_instance_details
@@ -63,7 +41,6 @@ class Instance < ActiveRecord::Base
                       :zone             => details[:aws_availability_zone],
                       :aws_state        => details[:aws_state]
     if running?
-      bootstrap
       environment.notify_of(:running, self)
     end
   end
@@ -85,10 +62,6 @@ class Instance < ActiveRecord::Base
     "root@#{public_address}"
   end
 
-  def bootstrap
-    bootstrap_logs.create
-  end
-
   # TODO: do something way better with this, like probably put it in an Application model which has_many environments
   def cookbook_repository
     @cookbook_repository ||= CookbookRepository.new("git@github.com:giraffesoft/conductor-cookbooks.git")
@@ -96,18 +69,6 @@ class Instance < ActiveRecord::Base
 
   def dna
     @dna ||= Dna.new(environment, role, cookbook_repository)
-  end
-
-  def deploy(opts = {})
-    if opts[:now]
-      chef_deployments.create :dont_deploy => true
-    else
-      chef_deployments.create
-    end
-  end
-
-  def ready_for_deployment?
-    !app? || environment.has_configured_db_server?
   end
 
   def assign_address!(address)
@@ -161,12 +122,6 @@ class Instance < ActiveRecord::Base
 
     def launch_wait_for_state_change_job
       send_later(:wait_for_state_change)
-    end
-
-    def assert_ready_for_deployment
-      unless ready_for_deployment?
-        raise WaitForConfiguredDbServer, "Waiting for a configured db server."
-      end
     end
 
     def notify_environment_of_launch

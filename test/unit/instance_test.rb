@@ -6,6 +6,8 @@ class InstanceTest < Test::Unit::TestCase
     Ec2.test_mode_calls = {}
     @instance           = Factory(:mysql_master)
     @environment        = Factory(:environment)
+    CookbookRepository.any_instance.stubs(:pull)
+    CookbookRepository.any_instance.stubs(:clone)
   end
 
   should_belong_to :environment
@@ -73,63 +75,6 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
-  context "starting the deployment" do
-    should "create a chef deployment" do
-      @instance = Factory(:running_instance)
-      @instance.stubs(:chef_deployments).returns(mock(:create => nil))
-      @instance.deploy
-    end
-
-    should "create a chef deployment with :dont_deploy => true if :now => true" do
-      @instance  = Factory(:running_instance)
-      mock_assoc = mock
-      mock_assoc.expects(:create).with(:dont_deploy => true)
-      @instance.stubs(:chef_deployments).returns(mock_assoc)
-      @instance.deploy(:now => true)
-    end
-  end
-
-  context "Setting an instance as bootstrapped" do
-    should "set the config_state to bootstrapped and start deploying" do
-      @instance = Factory(:running_instance)
-      @instance.expects(:deploy)
-      @instance.bootstrapped!
-      assert @instance.bootstrapped?
-    end
-  end
-
-  context "Setting an instance as bootstrapping" do
-    should "set the config_state to bootstrapping" do
-      @instance = Factory(:running_instance)
-      @instance.bootstrapping!
-      assert @instance.bootstrapping?
-    end
-  end
-
-  context "Setting an instance as deployed" do
-    should "set the config_state to deployed" do
-      @instance = Factory(:running_instance)
-      @instance.deployed!
-      assert @instance.deployed?
-    end
-  end
-
-  context "Setting an instance as deploying" do
-    should "set the config_state to deploying" do
-      @instance = Factory(:running_instance)
-      @instance.deploying!
-      assert @instance.deploying?
-    end
-  end
-
-  context "Setting an instance as deployment_failed" do
-    should "set the config_state to deployment_failed" do
-      @instance = Factory(:running_instance)
-      @instance.deployment_failed!
-      assert @instance.deployment_failed?
-    end
-  end
-
   context "After destroying an instances" do
     should "ask ec2 to destroy it" do
       Ec2.any_instance.expects(:terminate_instances).with(@instance.instance_id)
@@ -170,10 +115,6 @@ class InstanceTest < Test::Unit::TestCase
         assert_equal describe_instances_result[:aws_availability_zone], @instance.zone
       end
 
-      before_should "start the bootstrapping job" do
-        @instance.expects(:bootstrap)
-      end
-
       before_should "notify the environment" do
         @instance.environment.expects(:notify_of).with(:running, @instance)
       end
@@ -197,49 +138,12 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
-  context "Asking an instance to bootstrap" do
-    should "create a bootstrap deployment" do
-      @instance = Factory(:instance, :role => "mysql_master")
-      @instance.stubs(:bootstrap_logs).returns(mock(:create => nil))
-      @instance.bootstrap
-    end
-  end
-
   context "An instance's dna" do
     should "delegate to dna with its role and cookbook repository" do
       CookbookRepository.any_instance.stubs(:clone).stubs(:pull)
       @instance = Factory(:instance, :role => "mysql_master")
       Dna.expects(:new).with(@instance.environment, @instance.role, @instance.cookbook_repository)
       @instance.dna
-    end
-  end
-
-  context "An app server" do
-    setup do
-      @instance = Factory.build(:instance, :role => "app")
-    end
-    
-    should "be ready_for_deployment? if there is a configured db server" do
-      @instance.environment.stubs(:has_configured_db_server?).returns(true)
-      assert @instance.ready_for_deployment?
-    end
-
-    should "not be ready_for_deployment? if there is not a configured db server" do
-      @instance.environment.stubs(:has_configured_db_server?).returns(false)
-      assert !@instance.ready_for_deployment?
-    end
-  end
-
-  context "Marking an instance that isn't ready for deployment as deploying" do
-    setup do
-      @instance = Factory.build(:instance, :role => "app")
-    end
-
-    should "raise Instance::WaitForConfiguredDbServerError" do
-      @instance.stubs(:ready_for_deployment?).returns(false)
-      assert_raise(Instance::WaitForConfiguredDbServer) {
-        @instance.deploying!
-      }
     end
   end
 
