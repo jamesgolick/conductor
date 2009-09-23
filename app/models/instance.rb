@@ -3,6 +3,16 @@ class Instance < ActiveRecord::Base
     def ami_for(instance_size)
       %w(m1.small c1.medium).include?(instance_size) ? "ami-ef48af86" : "ami-e257b08b"
     end
+
+    def deployment_event_map
+      {ChefDeploymentRunner      => {:start      => "deploying",
+                                     :successful => "deployed",
+                                     :failure    => "deployment_failed",
+                                     :cancelled  => "deployment_cancelled"},
+       BootstrapDeploymentRunner => {:start      => "bootstrapping",
+                                     :successful => "bootstrapped",
+                                     :failure    => "bootstrap_failed"}}
+    end
   end
 
   belongs_to :environment
@@ -21,7 +31,8 @@ class Instance < ActiveRecord::Base
   enum_field :aws_state,    %w( pending running terminating ),          :allow_nil => true
   enum_field :config_state, %w( unconfigured bootstrapping bootstrapped 
                                 deploying deployment_failed deployed 
-                                deployment_cancelled ), :allow_nil => true
+                                deployment_cancelled bootstrap_failed), 
+                            :allow_nil => true
 
   validate :database_server_is_running
 
@@ -81,13 +92,8 @@ class Instance < ActiveRecord::Base
   end
 
   def deployment_event(runner, event)
-    if runner.is_a?(ChefDeploymentRunner)
-      event_map = {:start      => "deploying",
-                   :successful => "deployed",
-                   :failure    => "deployment_failed",
-                   :cancelled  => "deployment_cancelled"}
-      update_attribute :config_state, event_map[event]
-    end
+    state = self.class.deployment_event_map[runner.class][event]
+    update_attribute :config_state, state
   end
 
   protected
