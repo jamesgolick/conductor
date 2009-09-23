@@ -8,15 +8,12 @@ class DeploymentLogger
   end
 
   def log(host, stream, data)
-    log      = log_for(host)
-    new_log = [log.log, build_line(stream, data)].compact.join
-    log.update_attributes :log => new_log
+    log_for(host).append(build_line(stream, data))
   end
 
   def system_message(message)
     logs.values.each do |l|
-      new_log = [l.log, build_line(:system, message)].compact.join
-      l.update_attributes :log => new_log
+      l.append build_line(:system, message)
     end
   end
 
