@@ -13,9 +13,9 @@
   </div>
   <div class="log_window">
     <% if instance.bootstrapping? -%>
-      <%= instance.bootstrap_deployments.last.last_line_of_log %>
+      <%= instance.bootstrap_logs.last.last_line %>
     <% elsif instance.deploying? -%>
-      <%= instance.chef_deployments.last.last_line_of_log %>
+      <%= instance.chef_logs.last.last_line %>
     <% end -%>
   </div>
 </li>
