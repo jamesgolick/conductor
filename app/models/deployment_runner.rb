@@ -5,7 +5,6 @@ class DeploymentRunner
     @instances = instances
     @logger    = DeploymentLogger.new(deployment_type, *instances)
     @notifier  = InstanceNotifier.new(self, *instances)
-    send_later :perform_deployment
   end
 
   def perform_deployment
