@@ -53,10 +53,10 @@ class SshTest < Test::Unit::TestCase
 
   context "The result proxy object" do
     setup do
-      @channels = [OpenStruct.new(:properties => {:host      => "server.com", 
-                                                  :exit_code => 0}),
-                   OpenStruct.new(:properties => {:host      => "otherserver.com",
-                                                  :exit_code => 0})]
+      @channels = [OpenStruct.new(:properties => {:host        => "server.com", 
+                                                  :exit_status => 0}),
+                   OpenStruct.new(:properties => {:host        => "otherserver.com",
+                                                  :exit_status => 0})]
       @result = Ssh::ResultProxy.new(@channels)
     end
 
@@ -68,7 +68,7 @@ class SshTest < Test::Unit::TestCase
 
     context "when one or more hosts have failed" do
       setup do
-        @channels.first.properties[:exit_code] = 127
+        @channels.first.properties[:exit_status] = 127
         @result = Ssh::ResultProxy.new(@channels)
       end
 

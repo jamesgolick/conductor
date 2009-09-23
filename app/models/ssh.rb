@@ -22,7 +22,7 @@ class Ssh
 
     def initialize(properties)
       @host      = properties[:host]
-      @exit_code = properties[:exit_code]
+      @exit_code = properties[:exit_status]
     end
 
     def successful?
@@ -71,7 +71,7 @@ class Ssh
 
     ssh.loop
 
-    ResultProxy.new(channel.channels)
+    ResultProxy.new(channel.respond_to?(:channels) ? channel.channels : [channel])
   end
 
   def put(opts)
