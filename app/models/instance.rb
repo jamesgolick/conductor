@@ -97,8 +97,13 @@ class Instance < ActiveRecord::Base
   end
 
   def deployment_event(runner, event)
-    state = self.class.deployment_event_map[runner.class][event]
+    state   = self.class.deployment_event_map[runner.class][event]
     update_attribute :config_state, state
+    deploy if bootstrapped?
+  end
+
+  def deploy
+    ChefDeploymentRunner.new(self).perform_deployment
   end
 
   protected

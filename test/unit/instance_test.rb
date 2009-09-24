@@ -130,6 +130,16 @@ class InstanceTest < Test::Unit::TestCase
     end
   end
 
+  context "After being successfully bootstrapped" do
+    should "configure the instance" do
+      runner_stub = stub(:perform_deployment => nil)
+      ChefDeploymentRunner.stubs(:new).returns(runner_stub)
+      @instance.deployment_event(BootstrapDeploymentRunner.new, :successful)
+      assert_received(ChefDeploymentRunner, :new) { |e| e.with(@instance) }
+      assert_received(runner_stub, :perform_deployment)
+    end
+  end
+
   context "Checking whether the aws state has changed" do
     setup do
       @environment.stubs(:has_database_server?).returns(true)
