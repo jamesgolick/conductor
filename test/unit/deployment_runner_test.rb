@@ -3,10 +3,11 @@ require 'test_helper'
 class DeploymentRunnerTest < ActiveSupport::TestCase
   def setup
     DeploymentRunner.any_instance.stubs(:deployment_type).returns(:chef)
-    Ec2.mode    = :test
-    @successful = Factory(:running_instance)
-    @failure    = Factory(:running_instance, :dns_name => "failsauce.com")
-    @runner     = DeploymentRunner.new(@successful, @failure)
+    Ec2.mode         = :test
+    @successful      = Factory(:running_instance)
+    @failure         = Factory(:running_instance, :dns_name => "failsauce.com")
+    @runner          = DeploymentRunner.new(@successful, @failure)
+    @runner.instance_variable_set(:@notifier, stub_everything)
     @runner.stubs(:build_ssh_session).returns(SshSession.new {})
   end
 
@@ -16,6 +17,7 @@ class DeploymentRunnerTest < ActiveSupport::TestCase
   end
 
   should "create an instance notifier" do
+    @runner = DeploymentRunner.new(@successful, @failure)
     assert_equal @runner.instances, @runner.notifier.instances
     assert_equal @runner, @runner.notifier.runner
   end
