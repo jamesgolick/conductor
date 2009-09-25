@@ -98,10 +98,10 @@ class SshSessionTest < ActiveSupport::TestCase
   context "SshSession::ResultSet" do
     setup do
       @result_set = SshSession::ResultSet.new
-      success     = Ssh::Result.new :host      => "whatever.com",
-                                    :exit_code => 0
-      failure     = Ssh::Result.new :host      => "otherstuff.com",
-                                    :exit_code => 1
+      success     = Ssh::Result.new :host        => "whatever.com",
+                                    :exit_status => 0
+      failure     = Ssh::Result.new :host        => "otherstuff.com",
+                                    :exit_code   => 1
       @result_set << Ssh::ResultProxy.new(success)
       @result_set << Ssh::ResultProxy.new(failure)
     end
