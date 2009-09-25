@@ -46,6 +46,8 @@ class Ssh
         rescue Net::SFTP::StatusException => e
           @failure       = true
           @error_message = e.description
+        ensure
+          sftp.close_channel
         end
       end
     end
