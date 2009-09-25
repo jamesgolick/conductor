@@ -6,7 +6,7 @@ class ChefDeploymentRunner < DeploymentRunner
 
     def build_ssh_session
       put_arguments = dna.merge(:path => "/etc/chef/dna.json")
-      SshSession.new do
+      SshSession.new(*instances.map(&:connection_string)) do
         run "if [ -d /var/chef ]; then
           cd /var/chef && git pull
         else
@@ -19,6 +19,6 @@ class ChefDeploymentRunner < DeploymentRunner
     end
 
     def dna
-      Hash[*instances.map { |i| [i.connection_string, i.to_dna] }.flatten]
+      Hash[*instances.map { |i| [i.connection_string, i.dna.to_json] }.flatten]
     end
 end
