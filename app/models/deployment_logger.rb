@@ -31,7 +31,7 @@ class DeploymentLogger
     end
 
     def log_for(host)
-      logs[instances.detect { |i| i.dns_name == host }]
+      logs[instances.detect { |i| i.public_address == host }]
     end
 end
 

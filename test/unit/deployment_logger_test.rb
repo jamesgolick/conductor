@@ -36,5 +36,15 @@ class DeploymentLoggerTest < ActiveSupport::TestCase
       chef_log = @instance.chef_logs.reload
       assert_equal "[SYSTEM]: Running command ls -la\n", chef_log.first.log
     end
+
+    should "log correctly when the instance has an address" do
+      @instance = Factory(:mysql_master)
+      @instance.stubs(:address).returns(stub(:address => "127.0.0.1"))
+      @logger   = DeploymentLogger.new(:chef, @instance)
+      @logger.log "127.0.0.1", :stdout, "yep"
+      chef_log  = @instance.chef_logs.reload
+
+      assert_equal "[STDOUT]: yep\n", chef_log.first.log
+    end
   end
 end
