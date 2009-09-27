@@ -21,6 +21,9 @@ cp solo.rb /etc/chef
 
 ssh -o'StrictHostKeyChecking=no' git@github.com
 
+echo 'PATH="/opt/ruby-enterprise/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"' > /etc/environment
+cp run_chef /usr/local/bin
+
 if [ $(uname -m) = 'x86_64' ]; then
   arch=x86_64
 else
