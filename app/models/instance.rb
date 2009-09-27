@@ -39,8 +39,8 @@ class Instance < ActiveRecord::Base
                  :notify_environment_of_termination
 
   named_scope    :running,    :conditions => {:aws_state    => "running"}
-  named_scope    :configured, :conditions => {:config_state => "deployed"}
   named_scope    :app,        :conditions => {:role         => "app"}
+  named_scope    :configured, :conditions => {:configured   => true}
 
   def update_instance_state
     details = aws_instance_details
