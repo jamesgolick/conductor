@@ -2,6 +2,7 @@
   <script type="text/javascript">
     $(function() {
       $.PeriodicalUpdater({
+        multiplier: 1,
         url: '<%= environment_instances_url(@environment) %>.js'
         }, function(data) {
           $('#instances').html(data);
