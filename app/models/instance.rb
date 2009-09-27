@@ -92,6 +92,7 @@ class Instance < ActiveRecord::Base
   def deployment_event(runner, event)
     state = self.class.deployment_event_map[event]
     update_attribute :config_state, state
+    update_attribute :configured, true if state == "deployed"
   end
 
   def deploy

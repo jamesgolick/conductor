@@ -220,6 +220,16 @@ class InstanceTest < Test::Unit::TestCase
     assert_equal "deployment_cancelled", @instance.config_state
   end
 
+  context "When an instance has been deployed successfully for the first time" do
+    setup do
+      @instance.deployment_event(ChefDeploymentRunner.new, :successful)
+    end
+
+    should "set the instance to configured" do
+      assert @instance.configured?
+    end
+  end
+
   protected
     def describe_instances_result
       {

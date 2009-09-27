@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090915012643) do
+ActiveRecord::Schema.define(:version => 20090927180320) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "environment_id"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(:version => 20090915012643) do
     t.string   "dns_name"
     t.string   "private_dns_name"
     t.string   "aws_state"
+    t.boolean  "configured",       :default => false
   end
 
   create_table "logs", :force => true do |t|
