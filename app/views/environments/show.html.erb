@@ -3,6 +3,7 @@
     $(function() {
       $.PeriodicalUpdater({
         multiplier: 1,
+        minTimeout: 500,
         url: '<%= environment_instances_url(@environment) %>.js'
         }, function(data) {
           $('#instances').html(data);
