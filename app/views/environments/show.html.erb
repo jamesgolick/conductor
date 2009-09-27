@@ -16,7 +16,9 @@
 
 <h3>
   <%= pluralize(@environment.instances.count, "instance") %> running
-  <%= link_to "deploy", deployments_environment_url(object), :method => :post %>
+  <% unless @environment.instances.configured.empty? %>
+    <%= link_to "deploy", deployments_environment_url(object), :method => :post %>
+  <% end -%>
 </h3>
 
 <ul id="instances">
