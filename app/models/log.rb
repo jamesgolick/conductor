@@ -4,6 +4,6 @@ class Log < ActiveRecord::Base
   end
 
   def last_line
-    log.split("\n").last
+    log.blank? ? "" : log.split("\n").last
   end
 end
