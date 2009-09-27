@@ -91,8 +91,8 @@ class InstanceTest < Test::Unit::TestCase
     setup do
       @environment.stubs(:has_database_server?).returns(true)
       @instance = Factory(:instance, :environment => @environment)
-      @bootstrap_stub = stub(:perform_deployment => nil)
-      BootstrapDeploymentRunner.stubs(:new).returns(@bootstrap_stub)
+      @chef_stub = stub(:perform_deployment => nil)
+      ChefDeploymentRunner.stubs(:new).returns(@chef_stub)
     end
 
     context "going in to running" do
@@ -121,22 +121,12 @@ class InstanceTest < Test::Unit::TestCase
         @instance.environment.expects(:notify_of).with(:running, @instance)
       end
 
-      should "create a bootstrap deployment" do
-        assert_received(BootstrapDeploymentRunner, :new) do |e|
+      should "create a chef deployment" do
+        assert_received(ChefDeploymentRunner, :new) do |e|
           e.with(@instance)
         end
-        assert_received(@bootstrap_stub, :perform_deployment)
+        assert_received(@chef_stub, :perform_deployment)
       end
-    end
-  end
-
-  context "After being successfully bootstrapped" do
-    should "configure the instance" do
-      runner_stub = stub(:perform_deployment => nil)
-      ChefDeploymentRunner.stubs(:new).returns(runner_stub)
-      @instance.deployment_event(BootstrapDeploymentRunner.new, :successful)
-      assert_received(ChefDeploymentRunner, :new) { |e| e.with(@instance) }
-      assert_received(runner_stub, :perform_deployment)
     end
   end
 

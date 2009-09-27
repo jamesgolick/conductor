@@ -1,7 +1,7 @@
 class Instance < ActiveRecord::Base
   class << self
     def ami_for(instance_size)
-      %w(m1.small c1.medium).include?(instance_size) ? "ami-ef48af86" : "ami-e257b08b"
+      %w(m1.small c1.medium).include?(instance_size) ? "ami-b6a241df" : "ami-e257b08b"
     end
 
     def deployment_event_map
@@ -52,13 +52,9 @@ class Instance < ActiveRecord::Base
                       :zone             => details[:aws_availability_zone],
                       :aws_state        => details[:aws_state]
     if running?
-      bootstrap
+      deploy
       environment.notify_of(:running, self)
     end
-  end
-
-  def bootstrap
-    BootstrapDeploymentRunner.new(*self).perform_deployment
   end
 
   def aws_state_changed?
@@ -99,7 +95,6 @@ class Instance < ActiveRecord::Base
   def deployment_event(runner, event)
     state   = self.class.deployment_event_map[runner.class][event]
     update_attribute :config_state, state
-    deploy if bootstrapped?
   end
 
   def deploy
