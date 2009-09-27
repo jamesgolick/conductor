@@ -1,0 +1,8 @@
+if [ -d /var/chef ]; then
+  cd /var/chef && git pull
+else
+  git clone $1 /var/chef
+fi
+source /etc/environment && 
+         /opt/ruby-enterprise/bin/chef-solo -j /etc/chef/dna.json
+

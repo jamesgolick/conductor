@@ -1,0 +1,56 @@
+ARCH=`uname -m | sed -e's/x86_64/amd64/' | sed -e's/i686/i386/'`
+
+if [ "$ARCH" = "i386" ]; then
+  wget http://rubyforge.org/frs/download.php/58679/ruby-enterprise_1.8.6-20090610_$ARCH.deb
+else
+  wget http://rubyforge.org/frs/download.php/58678/ruby-enterprise_1.8.6-20090610_$ARCH.deb
+fi;
+
+dpkg -i ruby-enterprise_1.8.6-20090610_$ARCH.deb
+
+/opt/ruby-enterprise/bin/gem sources --add http://gems.opscode.com
+/opt/ruby-enterprise/bin/gem sources --add http://gems.github.com
+
+apt-get update
+apt-get install -y build-essential git-core
+/opt/ruby-enterprise/bin/gem install json --version=1.1.4 --no-rdoc --no-ri
+/opt/ruby-enterprise/bin/gem install --include-dependencies --no-rdoc --no-ri chef ohai --source=http://gems.opscode.com --source=http://gems.rubyforge.org
+mkdir -p /etc/chef
+
+cp solo.rb /etc/chef
+
+ssh -o'StrictHostKeyChecking=no' git@github.com
+
+if [ $(uname -m) = 'x86_64' ]; then
+  arch=x86_64
+else
+  arch=i386
+fi
+
+bucket=conductorapp
+prefix=conductor-ubuntu-8.04-$arch-`date +"%Y%m%d"`
+
+rm -f /root/.*hist* $HOME/.*hist*
+rm -f /var/log/*.gz
+find /var/log -name mysql -prune -o -type f -print | while read i; do sudo cp /dev/null $i; done
+
+export AWS_USER_ID=`cat /mnt/user_id`
+export AWS_ACCESS_KEY_ID=`cat /mnt/access_key`
+export AWS_SECRET_ACCESS_KEY=`cat /mnt/secret_access_key`
+
+sudo -E ec2-bundle-vol           \
+  -r $arch                       \
+  -d /mnt                        \
+  -p $prefix                     \
+  -u $AWS_USER_ID                \
+  -k /mnt/PrivateKey.pem         \
+  -c /mnt/509Cert.pem            \
+  -s 10240                       \
+  -e /mnt,/tmp,/root/.ssh/authorized_keys
+
+ec2-upload-bundle                \
+    -b $bucket                   \
+    -m /mnt/$prefix.manifest.xml \
+    -a $AWS_ACCESS_KEY_ID        \
+    -s $AWS_SECRET_ACCESS_KEY
+

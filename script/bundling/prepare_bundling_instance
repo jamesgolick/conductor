@@ -1,0 +1,4 @@
+scp script/bundling/* root@$1:/mnt
+scp config/solo.rb root@$1:/mnt
+scp ~/.ec2/$EC2_INSTALLATION/* root@$1:/mnt
+
