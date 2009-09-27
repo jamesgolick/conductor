@@ -5,13 +5,10 @@ class Instance < ActiveRecord::Base
     end
 
     def deployment_event_map
-      {ChefDeploymentRunner      => {:start      => "deploying",
-                                     :successful => "deployed",
-                                     :failure    => "deployment_failed",
-                                     :cancelled  => "deployment_cancelled"},
-       BootstrapDeploymentRunner => {:start      => "bootstrapping",
-                                     :successful => "bootstrapped",
-                                     :failure    => "bootstrap_failed"}}
+      {:start      => "deploying",
+       :successful => "deployed",
+       :failure    => "deployment_failed",
+       :cancelled  => "deployment_cancelled"}
     end
   end
 
@@ -93,7 +90,7 @@ class Instance < ActiveRecord::Base
   end
 
   def deployment_event(runner, event)
-    state   = self.class.deployment_event_map[runner.class][event]
+    state = self.class.deployment_event_map[event]
     update_attribute :config_state, state
   end
 
