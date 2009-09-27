@@ -14,7 +14,10 @@
 
 <h2><%= h @environment.application.name %>: <%= h @environment.name %></h2>
 
-<h3><%= pluralize(@environment.instances.count, "instance") %> running</h3>
+<h3>
+  <%= pluralize(@environment.instances.count, "instance") %> running
+  <%= link_to "deploy", deployments_environment_url(object), :method => :post %>
+</h3>
 
 <ul id="instances">
   <%= render :partial => 'instance', :collection => @environment.instances %>
