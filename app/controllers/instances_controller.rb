@@ -10,7 +10,7 @@ class InstancesController < ResourceController::Base
 
   def deployments
     load_object
-    @instance.deploy
+    @instance.send_later :deploy
     flash[:notice] = "Deploying"
 
     redirect_to @instance.environment
