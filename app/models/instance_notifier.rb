@@ -29,7 +29,7 @@ class InstanceNotifier
 
     def notify_some(hosts, included, not_included)
       instances.each do |i|
-        event = hosts.include?(i.dns_name) ? included : not_included
+        event = hosts.include?(i.public_address) ? included : not_included
         i.deployment_event(runner, event)
       end
     end

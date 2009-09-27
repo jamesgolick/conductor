@@ -31,6 +31,19 @@ class InstanceNotifierTest < ActiveSupport::TestCase
     @notifier.failure(["failsauce.com"])
   end
 
+  should "notify of failure, even when an instance has an address" do
+    @success  = Factory(:running_instance)
+    @failure  = Factory(:running_instance, :dns_name => "failsauce.com")
+    @failure.stubs(:address).returns(stub(:address => "failsauceaddress.com"))
+    @deployer = ChefDeploymentRunner.new
+    @notifier = InstanceNotifier.new(@deployer, @success, @failure)
+
+    @failure.expects(:deployment_event).with(@deployer, :failure)
+    @success.expects(:deployment_event).with(@deployer, :successful)
+
+    @notifier.failure(["failsauceaddress.com"])
+  end
+
   protected
     def expect_all(event)
       @success.expects(:deployment_event).with(@deployer, event)
