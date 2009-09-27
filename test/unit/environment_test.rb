@@ -135,6 +135,7 @@ class EnvironmentTest < Test::Unit::TestCase
   context "When an instance launches" do
     setup do
       @env = Factory(:environment)
+      @env.stubs(:deploy)
       @db  = Factory(:mysql_master, :environment => @env)
     end
 
@@ -149,6 +150,21 @@ class EnvironmentTest < Test::Unit::TestCase
       @app = Factory.build(:app_server,   :environment => @env)
       @env.stubs(:master).returns(@app)
       @env.notify_of(:launch, @app)
+    end
+
+    should "not deploy the cluster if there's only one instance in it" do
+      @env.notify_of(:running, @db)
+
+      assert_received(@env, :deploy) { |e| e.never }
+    end
+
+    should "deploy the cluster if there's more than one machine" do
+      @app = Factory(:app_server, :environment => @env, 
+                                  :configured  => true)
+      @db.update_attribute :configured, true
+      @env.notify_of(:running, @app)
+
+      assert_received(@env, :deploy)
     end
   end
 
@@ -174,6 +190,7 @@ class EnvironmentTest < Test::Unit::TestCase
     setup do
       Instance.any_instance.stubs(:assign_address!)
       @env = Factory(:environment)
+      @env.stubs(:deploy)
       @db  = Factory(:mysql_master, :environment => @env)
       @app = Factory(:app_server,   :environment => @env)
     end

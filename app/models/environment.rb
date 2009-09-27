@@ -58,6 +58,8 @@ class Environment < ActiveRecord::Base
     elsif event == :running && need_master?
       acquire_new_master
     end
+
+    deploy if event == :running && instances.configured.count > 1
   end
 
   def need_master?
