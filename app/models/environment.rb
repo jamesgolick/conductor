@@ -65,7 +65,7 @@ class Environment < ActiveRecord::Base
   end
 
   def deploy
-    instances.running.each { |i| i.deploy :now => true }
+    ChefDeploymentRunner.new(*instances.configured).perform_deployment
   end
 
   protected

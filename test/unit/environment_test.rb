@@ -192,16 +192,24 @@ class EnvironmentTest < Test::Unit::TestCase
   end
 
   context "Deploying the whole environment" do
-    should "create a chef deployment for each of the running instances in the cluster" do
+    setup do
       @env = Factory(:environment)
       @db  = Factory(:mysql_master, :environment => @env)
-      @db.update_attribute :aws_state, "running"
+      @db.update_attributes :configured => true
       @app = Factory(:app_server,   :environment => @env)
-      @app.update_attribute :aws_state, "running"
+      @app.update_attributes :configured => true
+      @app2 = Factory(:app_server,   :environment => @env)
 
-      # can't seem to say that each instance expects it once, so oh well
-      Instance.any_instance.expects(:deploy).with(:now => true).times(2)
+      @deploy_stub = stub(:perform_deployment => nil)
+      ChefDeploymentRunner.stubs(:new).returns(@deploy_stub)
       @env.deploy
+    end
+
+    should "create a chef deployment with all configured instances" do
+      assert_received(ChefDeploymentRunner, :new) do |e|
+        e.with(*@env.instances.configured)
+      end
+      assert_received(@deploy_stub, :perform_deployment)
     end
   end
 end
