@@ -6,9 +6,11 @@ class ChefDeploymentRunner < DeploymentRunner
 
     def build_ssh_session
       put_arguments = dna.merge(:path => "/etc/chef/dna.json")
+      cookbook_url  = instances.first.environment.application.cookbook_clone_url
       SshSession.new(*instances.map(&:connection_string)) do
         put put_arguments
-        run "/usr/local/bin/run_chef git@github.com:giraffesoft/conductor-cookbooks.git"
+        # TODO: this is ugly
+        run "/usr/local/bin/run_chef #{cookbook_url}"
       end
     end
 
