@@ -49,6 +49,10 @@ Run rake jobs:work from the command line, to get the background worker going.
 
 Visit the application in your browser. Getting started should be fairly straightforward.
 
+== AMIs
+
+Currently, conductor will automatically launch a conductor-compatible AMI, based on the alestic Ubuntu 8.04 images. The AMIs include Ruby Enterprise Edition, chef, and a few other handy things. If you wish to use another OS with conductor, you'll need to setup compatible AMIs yourself. I intend to make this a lot easier in the future.
+
 == TODO
 
 This is an early alpha release. There's a lot left to do.
