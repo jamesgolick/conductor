@@ -1,0 +1,73 @@
+== Conductor
+
+Create scalable clusters in the cloud with chef.
+
+Conductor is a rails app that sits at the centre of your infrastructure.
+
+This is an early alpha release with a limited feature set. But, it sets the stage for a lot. Here's a little sample of the roadmap:
+
+  1. On-demand staging.
+     Clone the entire production environment, including databases in one click. Terminate it when you're done. Pay for what you used.
+  2. Monitoring and auto-scaling.
+     Pipe metrics, like CPU usage in to conductor. If average CPU usage on the app servers gets above a certain threshold, launch another one. If average CPU drops below the threshold, kill one. Only run the servers you actually need.
+  3. Coordinated snapshotting of multiple EBS volumes.
+     One of the problems with running EBS volumes in a RAID configuration is backups. If you are snapshotting more than one drive at a time, you need some way to keep track of which sets of snapshots go together for recovery. Even better, a central app can be smart enough to perform the recover itself.
+
+== Right Now
+
+So, that's what's planned. Here's what we have now:
+
+  1. It's possible to launch instances for multiple applications in multiple environments.
+  2. When you launch an app server, it will automatically allocate an IP address from amazon. Whichever app server is launched first becomes the "master" and gets the IP address assigned to it. If you terminate that instance, one of the other app servers will automatically get assigned the IP address. If no more app servers exist, the next time you launch one, it'll get the IP. So, you can safely assign that IP to your DNS.
+  3. When you launch a new server, it gets configured in isolation first. When that succeeds, it will reconfigure the whole cluster. That way, you never have a load balancer routing traffic to an unconfigured instance. (Note: The termination procedure should be similar, except in reverse. That's not implemented yet.)
+
+== Cookbooks
+
+I wrote conductor to manage my company's rails infrastructure. But, it's not limited to that. You can use conductor to manage any web app infrastructure. You just need some cookbooks.
+
+I'm releasing a basic rails stack for use with conductor, which is located at (http://github.com/giraffesoft/conductor-rails)[http://github.com/giraffesoft/conductor-rails]. Fork it and add cookbooks for your other infrastructure pieces (search index, queues, cronjobs, etc). You may wish to make this repo private.
+
+(Note: In the next couple of iterations, I plan to decouple conductor from the notion of web clusters, so that it can be a more general infrastructure management tool, but that's vapor for the time being.)
+
+== Installation / Getting Started
+
+If you want to give conductor a try, here's what you need to do to get it running:
+
+Clone the repository and add a config/aws.yml file, with your AWS creds:
+
+development:
+  :access_key_id: 'access key id from aws'
+  :secret_access_key: 'secret access key from aws'
+
+Create an aws keypair called conductor-keypair and add it to your ssh-agent (usually `ssh-add ~/.ssh/conductor-keypair`.
+
+If your cookbook or application repository is private, make sure that your github ssh key is added to your ssh-agent.
+
+Create and migrate the conductor database, and run the app using the method of your choice (passenger, mongrel, whatever).
+
+Run rake jobs:work from the command line, to get the background worker going.
+
+Visit the application in your browser. Getting started should be fairly straightforward.
+
+== TODO
+
+This is an early alpha release. There's a lot left to do.
+
+Here are a few things that are planned, in no particular order. If you're interested in hacking on conductor, patches for one of these features would be hugely appreciated.
+
+  - On-demand staging
+  - Creating and attaching EBS volumes
+  - Auto-Scaling
+  - Decoupling from ec2
+  - Decoupling from the notion of web infrastructure
+  - Adding roles and servers that aren't launched by conductor (physical servers for hybrid environments)
+  - Adding launch dependencies: (app server depends on mysql master, which depends on nagios server, etc)
+  - Managing EBS snapshot sets and recovery
+  - UI Improvements
+  - A bootstrap for setting up a conductor instance, probably using chef-solo.
+  - Making getting started way easier (creating the keypair, etc).
+
+== Credits
+
+
+
