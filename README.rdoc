@@ -67,6 +67,14 @@ Here are a few things that are planned, in no particular order. If you're intere
   - A bootstrap for setting up a conductor instance, probably using chef-solo.
   - Making getting started way easier (creating the keypair, etc).
 
+== Hacking
+
+If you want to hack on conductor, fork it and send me a pull request. I will not accept any patches that are without unit tests, unless the feature is particularly difficult to test. 
+
+You may notice that there're a few failing cucumber stories. That's because I gave up on them, after I realized how difficult it is to integration test something that connects to so many remote systems (aws, ssh, etc). If you have a solution to this problem, cool. Otherwise, I'll probably get rid of the features eventually.
+
+Currently, the UI is untested, because it's super simple, and I'm using resource_controller. If you do anything complex in the UI, tests would be good.
+
 == Credits
 
 Conductor was written and is maintained by (http://jamesgolick.com)[James Golick] for use at fetlife.com (NSFW). It is distributable under the terms of the MIT License.
