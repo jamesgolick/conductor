@@ -12,22 +12,20 @@
   </script>
 <% end -%>
 
-<h2><%= h @environment.application.name %>: <%= h @environment.name %></h2>
+<h2>
+  <%= link_to @environment.application.name, @environment.application %> / <%= h @environment.name %>
 
-<h3>
-  <%= pluralize(@environment.instances.count, "instance") %> running
-  <% unless @environment.instances.configured.empty? %>
-    <%= link_to "deploy", deployments_environment_url(object), :method => :post %>
-  <% end -%>
+  <span class="small quiet">(<% unless @environment.instances.configured.empty? %><%= link_to "deploy", deployments_environment_url(object), :method => :post %> | 
+   <% end -%>
+   <%= link_to 'launch Instance', new_environment_instance_url(object) %>)</span>
+</h2>
+
+<h3 class="quiet">
 </h3>
+
+<hr/>
 
 <ul id="instances">
   <%= render :partial => 'instance', :collection => @environment.instances %>
 </ul>
 
-
-<%= link_to 'Launch Instance', new_environment_instance_url(object) %>
-|
-<%= link_to 'Edit', edit_object_url %>
-|
-<%= link_to 'Back', collection_url %>

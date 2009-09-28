@@ -1,0 +1,6 @@
+.log_window {
+  background-color: #666;
+  color: white;
+  font: 1.2em 'andale mono', 'lucidia console', monospace;
+  line-height: 1.5;
+}
