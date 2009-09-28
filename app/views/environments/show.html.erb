@@ -27,7 +27,7 @@
 
 <% if @environment.instances.empty? -%>
   <div class="box blank-state-notice">
-    Now, launch some instances.
+    Now, <%= link_to "launch some instances", new_environment_instance_url(object) %>.
   </div>
 <% else -%>
   <ul id="instances">

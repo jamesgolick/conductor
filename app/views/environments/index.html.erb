@@ -6,7 +6,7 @@
 <div class="span-23">
   <% if @environments.empty? -%>
     <div class="box blank-state-notice">
-      Then, create an environment.
+      Then, <%= link_to "create an environment", new_application_environment_url(@application) %>.
     </div>
   <% else -%>
     <ul>

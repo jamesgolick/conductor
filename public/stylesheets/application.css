@@ -10,6 +10,12 @@
   padding: 0.6em;
   color: white;
 }
+.blank-state-notice a {
+  color: white;
+}
+.blank-state-notice a:hover {
+  text-decoration: none;
+}
 #applications .name {
   font-size: 1.6em;
 }
