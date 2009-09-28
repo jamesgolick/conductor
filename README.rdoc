@@ -13,6 +13,8 @@ This is an early alpha release with a limited feature set. But, it sets the stag
   3. Coordinated snapshotting of multiple EBS volumes.
      One of the problems with running EBS volumes in a RAID configuration is backups. If you are snapshotting more than one drive at a time, you need some way to keep track of which sets of snapshots go together for recovery. Even better, a central app can be smart enough to perform the recover itself.
 
+  If you're interested in the project, follow it on github and subscribe to {my blog}[http://jamesgolick.com] for regular updates.
+
 == Right Now
 
 So, that's what's planned. Here's what we have now:
