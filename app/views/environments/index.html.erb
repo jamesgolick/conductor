@@ -3,14 +3,21 @@
   (<%= link_to 'new', new_object_url %>)
 </div>
 
-<div class="span-23 box">
-  <ul>
-    <% @environments.each do |e| -%>
-      <li>
-        <%= link_to e.name, object_url(e) %> 
-        (<%= link_to "edit", edit_object_url(e) %> | 
-         <%= link_to "destroy", object_url(e), :method => :delete, :confirm => "Are you absolutely sure!?!?!?! This will destroy all data in the environment." %>)
-      </li>
-    <% end -%>
+<div class="span-23">
+  <% if @environments.empty? -%>
+    <div class="box blank-state-notice">
+      Then, create an environment.
+    </div>
+  <% else -%>
+    <ul>
+      <% @environments.each do |e| -%>
+        <li>
+          <%= link_to e.name, object_url(e) %> 
+          (<%= link_to "edit", edit_object_url(e) %> | 
+           <%= link_to "destroy", object_url(e), :method => :delete, :confirm => "Are you absolutely sure!?!?!?! This will destroy all data in the environment." %>)
+        </li>
+      <% end -%>
+    </ul>
+  <% end -%>
 </div>
 
