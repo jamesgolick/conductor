@@ -69,5 +69,5 @@ Here are a few things that are planned, in no particular order. If you're intere
 
 == Credits
 
-
+Conductor was written and is maintained by (http://jamesgolick.com)[James Golick] for use at fetlife.com (NSFW). It is distributable under the terms of the MIT License.
 
