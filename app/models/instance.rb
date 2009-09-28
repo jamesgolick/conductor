@@ -1,7 +1,7 @@
 class Instance < ActiveRecord::Base
   class << self
     def ami_for(instance_size)
-      %w(m1.small c1.medium).include?(instance_size) ? "ami-b6a241df" : "ami-e257b08b"
+      %w(m1.small c1.medium).include?(instance_size) ? "ami-b6a241df" : "ami-4aa94a23"
     end
 
     def deployment_event_map
