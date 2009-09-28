@@ -81,6 +81,11 @@ class EnvironmentTest < Test::Unit::TestCase
     should "set the user to the name of the app" do
       assert_equal @environment.application.name, @environment.to_dna[:user]
     end
+
+    should "set the app_clone_url" do
+      actual = @environment.to_dna[:app_clone_url]
+      assert_equal @environment.application.clone_url, actual
+    end
   end
 
   context "Checking whether there's a configured db server" do

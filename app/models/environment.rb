@@ -27,11 +27,12 @@ class Environment < ActiveRecord::Base
 
   def to_dna
     {
-      :apps       => [application.name],
-      :rails_env  => name,
-      :servers    => instances.to_dna,
-      :app_domain => domain,
-      :user       => application.name
+      :apps          => [application.name],
+      :rails_env     => name,
+      :servers       => instances.to_dna,
+      :app_domain    => domain,
+      :user          => application.name,
+      :app_clone_url => application.clone_url
     }
   end
 
