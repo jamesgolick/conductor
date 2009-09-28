@@ -13,11 +13,10 @@
 <% end -%>
 
 <h2>
-  <%= link_to @environment.application.name, @environment.application %> / <%= h @environment.name %>
+  <%= link_to @environment.application.name, application_environments_url(@environment.application) %> / <%= h @environment.name %>
 
   <span class="small quiet">(<% unless @environment.instances.configured.empty? %><%= link_to "deploy", deployments_environment_url(object), :method => :post %> | 
-   <% end -%>
-   <%= link_to 'launch Instance', new_environment_instance_url(object) %>)</span>
+   <% end -%><%= link_to 'launch Instance', new_environment_instance_url(object) %>)</span>
 </h2>
 
 <h3 class="quiet">
