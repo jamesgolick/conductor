@@ -1,4 +1,5 @@
 <li class="instance">
+  <div class="clearfix">
   <div class="info">
     <%= instance.role %> (<%= instance.aws_state %>, <%= instance.config_state %>,
     <% if instance == @environment.master -%>
@@ -16,4 +17,5 @@
       <%= instance.chef_logs.last.last_line %>
     </div>
   <% end -%>
+</div>
 </li>

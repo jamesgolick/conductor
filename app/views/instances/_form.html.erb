@@ -1,12 +1,13 @@
-<p>
+<div class="span-3">
   <%= f.label :size, "Size:" %>
-  <%= f.select :size, Instance::SIZES %>
-</p>
-<p>
+</div>
+<div class="last"><%= f.select :size, Instance::SIZES %></div>
+<div class="span-3">
   <%= f.label :zone, "Availability Zone:" %>
-  <%= f.select :zone, Instance::ZONES %>
-</p>
-<p>
+</div>
+<div class="last"><%= f.select :zone, Instance::ZONES %></div>
+<div class="span-3">
   <%= f.label :role, "Role:" %>
-  <%= f.select :role, Instance::ROLES %>
-</p>
+</div>
+<div class="last"><%= f.select :role, Instance::ROLES %></div>
+

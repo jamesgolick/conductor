@@ -11,10 +11,12 @@
 </head>
 <body>
 
-<p style="color: green"><%= flash[:notice] %></p>
-
 <div class="container">
-  <div id="header" class="span-24">
+  <% unless flash[:notice].blank? -%>
+    <div class="prepend-top notice"><%= flash[:notice] %></div>
+  <% end -%>
+
+  <div id="header" class="span-24 prepend-top">
     <h1><%= link_to "Conductor", "/", :class => "loud" %></h1>
   </div>
   <hr />
