@@ -74,7 +74,7 @@ class Instance < ActiveRecord::Base
   end
 
   def dna
-    @dna ||= Dna.new(environment, role, cookbook_repository)
+    @dna ||= Dna.new(environment, role, cookbook_repository, self)
   end
 
   def assign_address!(address)
