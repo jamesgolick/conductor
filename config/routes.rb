@@ -3,4 +3,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :environments, :member => {:deployments => :post} do |e|
     e.resources :instances, :member => {:deployments => :post}
   end
+
+  map.root :controller => "applications"
 end
