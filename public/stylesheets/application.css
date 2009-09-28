@@ -4,3 +4,10 @@
   font: 1.2em 'andale mono', 'lucidia console', monospace;
   line-height: 1.5;
 }
+.blank-state-notice {
+  background-color: #666;
+  font-size: 2.9em;
+  padding: 0.6em;
+  color: white;
+}
+

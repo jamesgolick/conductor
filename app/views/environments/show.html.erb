@@ -25,9 +25,13 @@
 
 <hr/>
 
-<div class="border">
+<% if @environment.instances.empty? -%>
+  <div class="box blank-state-notice">
+    Now, launch some instances.
+  </div>
+<% else -%>
   <ul id="instances">
     <%= render :partial => 'instance', :collection => @environment.instances %>
   </ul>
-</div>
+<% end -%>
 
