@@ -71,6 +71,10 @@ class Environment < ActiveRecord::Base
     ChefDeploymentRunner.new(*instances.configured).perform_deployment
   end
 
+  def cookbook_repository
+    @cookbook_repo ||= CookbookRepository.new(application.cookbook_clone_url)
+  end
+
   protected
     def next_potential_master
       instances.app.running.first

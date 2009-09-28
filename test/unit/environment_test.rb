@@ -234,4 +234,10 @@ class EnvironmentTest < Test::Unit::TestCase
       assert_received(@deploy_stub, :perform_deployment)
     end
   end
+
+  should "create the cookbook repository object" do
+    @env = Factory(:environment)
+    CookbookRepository.expects(:new).with(@env.application.cookbook_clone_url)
+    @env.cookbook_repository
+  end
 end

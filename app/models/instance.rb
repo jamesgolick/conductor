@@ -42,6 +42,8 @@ class Instance < ActiveRecord::Base
   named_scope    :app,        :conditions => {:role         => "app"}
   named_scope    :configured, :conditions => {:configured   => true}
 
+  delegate       :cookbook_repository, :to => :environment
+
   def update_instance_state
     details = aws_instance_details
     update_attributes :dns_name         => details[:dns_name],
@@ -69,11 +71,6 @@ class Instance < ActiveRecord::Base
 
   def connection_string
     "root@#{public_address}"
-  end
-
-  # TODO: do something way better with this, like probably put it in an Application model which has_many environments
-  def cookbook_repository
-    @cookbook_repository ||= CookbookRepository.new("git@github.com:giraffesoft/conductor-cookbooks.git")
   end
 
   def dna
