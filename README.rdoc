@@ -25,7 +25,7 @@ So, that's what's planned. Here's what we have now:
 
 I wrote conductor to manage my company's rails infrastructure. But, it's not limited to that. You can use conductor to manage any web app infrastructure. You just need some cookbooks.
 
-I'm releasing a basic rails stack for use with conductor, which is located at (http://github.com/giraffesoft/conductor-rails)[http://github.com/giraffesoft/conductor-rails]. Fork it and add cookbooks for your other infrastructure pieces (search index, queues, cronjobs, etc). You may wish to make this repo private.
+I'm releasing a basic rails stack for use with conductor, which is located at {http://github.com/giraffesoft/conductor-rails}[http://github.com/giraffesoft/conductor-rails]. Fork it and add cookbooks for your other infrastructure pieces (search index, queues, cronjobs, etc). You may wish to make this repo private.
 
 (Note: In the next couple of iterations, I plan to decouple conductor from the notion of web clusters, so that it can be a more general infrastructure management tool, but that's vapor for the time being.)
 
@@ -77,5 +77,5 @@ Currently, the UI is untested, because it's super simple, and I'm using resource
 
 == Credits
 
-Conductor was written and is maintained by [http://jamesgolick.com](James Golick) for use at fetlife.com (NSFW). It is distributable under the terms of the MIT License.
+Conductor was written and is maintained by [James Golick]{http://jamesgolick.com} for use at fetlife.com (NSFW). It is distributable under the terms of the MIT License.
 
