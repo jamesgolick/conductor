@@ -66,6 +66,7 @@ Here are a few things that are planned, in no particular order. If you're intere
   - UI Improvements
   - A bootstrap for setting up a conductor instance, probably using chef-solo.
   - Making getting started way easier (creating the keypair, etc).
+  - Create a gem to interact with conductor instances restfully. It would be more fun to use conductor from the command line.
 
 == Hacking
 
