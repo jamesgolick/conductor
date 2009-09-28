@@ -1,5 +1,5 @@
 <h2>
-  <%= link_to @environment.application.name, @environment.application %>
+  <%= link_to @environment.application.name, application_environments_url(@environment.application) %>
   /
   <%= link_to @environment.name, @environment %>
   /

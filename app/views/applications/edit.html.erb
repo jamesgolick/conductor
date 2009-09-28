@@ -3,10 +3,12 @@
 <%= error_messages_for :application %>
 
 <% form_for(:application, :url => object_url, :html => { :method => :put }) do |f| %>
-  <%= render :partial => "form", :locals => { :f => f } %>
-  <p>
-    <%=submit_tag "Update"%>
-  </p>
+  <fieldset>
+    <%= render :partial => "form", :locals => { :f => f } %>
+    <div class="span-24 prepend-top">
+      <%= submit_tag "Save" %>
+    </div>
+  </fieldset>
 <% end %>
 
 <br/>
