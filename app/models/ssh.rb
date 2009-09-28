@@ -47,7 +47,7 @@ class Ssh
           @failure       = true
           @error_message = e.description
         ensure
-          sftp.close_channel
+          sftp && sftp.close_channel
         end
       end
     end
