@@ -1,21 +1,25 @@
-<h1>Listing Applications</h1>
+<div class="span-4">
+  <h2>Applications</h2>
+</div>
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Clone url</th>
-  </tr>
-  <%- @applications.each do |application|%>
-    <tr>
-      <td><%=h application.name %></td>
-      <td><%=h application.clone_url %></td>
-    
-      <td><%=link_to 'Show', object_url(application) %></td>
-      <td><%=link_to 'Edit', edit_object_url(application) %></td>
-      <td><%=link_to 'Destroy', object_url(application), :confirm => 'Are you sure?', :method => :delete %></td>
-    </tr>
-  <% end %>
-</table>
-<br/>
+<div class="span-4 large last">
+  <%= link_to 'New', new_object_url %>
+</div>
 
-<%= link_to 'New Application', new_object_url %>
+<div class="span-23 box">
+  <ul>
+    <% @applications.each do |a| -%>
+      <li>
+        <%= link_to a.name, application_environments_url(a) %> 
+        (<%= link_to "edit", edit_application_url(a) %> | 
+         <%= link_to "destroy", application_url(a), :method => :delete %>)
+        <div class="quiet">
+          <span class="loud">Clone:</span> <%= a.clone_url %>
+        </div>
+        <div class="quiet">
+          <span class="loud">Cookbooks</span> <%= a.cookbook_clone_url %>
+        </div>
+      </li>
+    <% end -%>
+</div>
+
