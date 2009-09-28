@@ -51,7 +51,7 @@ Visit the application in your browser. Getting started should be fairly straight
 
 == AMIs
 
-Currently, conductor will automatically launch a conductor-compatible AMI, based on the alestic Ubuntu 8.04 images. The AMIs include Ruby Enterprise Edition, chef, and a few other handy things. If you wish to use another OS with conductor, you'll need to setup compatible AMIs yourself. I intend to make this a lot easier in the future.
+Currently, conductor will automatically launch a conductor-compatible AMI (ami-b6a241df for 32bit or ami-4aa94a23 for 64), based on the alestic Ubuntu 8.04 images. The AMIs include Ruby Enterprise Edition, chef, and a few other handy things. If you wish to use another OS with conductor, you'll need to setup compatible AMIs yourself. I intend to make this a lot easier in the future.
 
 == TODO
 
