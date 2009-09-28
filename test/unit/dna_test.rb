@@ -8,7 +8,8 @@ class DnaTest < ActiveSupport::TestCase
       @repo = CookbookRepository.new("doesn't matter")
       @repo.stubs(:read).returns("some_attr 'a value'")
       @environment = Factory(:environment)
-      @dna  = Dna.new(@environment, "app", @repo)
+      @db   = Factory(:running_instance)
+      @dna  = Dna.new(@environment, "app", @repo, @db)
     end
 
     should "automatically add that to the runlist" do
@@ -22,11 +23,27 @@ class DnaTest < ActiveSupport::TestCase
     should "merge that environment's dna" do
       assert_equal @environment.name, @dna.rails_env
     end
+
+    should "set master to be false if it's not the master" do
+      assert !@dna[:master]
+    end
+
+    should "set master to be true if it is the master" do
+      @env  = Factory(:environment)
+      @db   = Factory(:running_instance)
+      @env.stubs(:master).returns(@db)
+      @dna  = Dna.new(@env, "app", @repo, @db)
+
+      assert @dna[:master]
+    end
   end
 
   context "Accessing hash keys via method syntax" do
     setup do
-      @dna = Dna.new(stub(:to_dna => {}), "app", stub_everything(:read => ''))
+      @db  = Factory(:running_instance)
+      @env = stub(:to_dna => {}, 
+                  :master => nil)
+      @dna = Dna.new(@env, "app", stub_everything(:read => ''), @db)
       @dna.some_attribute "some value"
     end
 

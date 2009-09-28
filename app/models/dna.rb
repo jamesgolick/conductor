@@ -1,15 +1,17 @@
 require 'json/pure'
 
 class Dna < HashWithIndifferentAccess
-  attr_reader :cookbook, :role, :environment
+  attr_reader :cookbook, :role, :environment, :instance
 
-  def initialize(environment, role, cookbook)
+  def initialize(environment, role, cookbook, instance)
     super()
     @role        = role
     @cookbook    = cookbook
     @environment = environment
+    @instance    = instance
 
     set_initial_run_list
+    set_master
     eval_attributes_file
     merge_environment_dna
   end
@@ -29,6 +31,10 @@ class Dna < HashWithIndifferentAccess
 
     def merge_environment_dna
       merge!(environment.to_dna)
+    end
+
+    def set_master
+      self[:master] = true if environment.master == instance
     end
 end
 
