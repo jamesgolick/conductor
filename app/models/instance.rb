@@ -15,7 +15,6 @@ class Instance < ActiveRecord::Base
   belongs_to :environment
 
   has_many   :chef_logs
-  has_many   :bootstrap_logs
   has_many   :chef_logs
 
   has_one    :address
